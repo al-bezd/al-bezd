@@ -59,8 +59,7 @@ class HomePage(Page):
             live=True,
             show_in_menus=True
         )
-        context['portfolio'] = PortfolioPage.objects.all().sort_by(
-            '-date_create')[0:5]
+        context['portfolio'] = PortfolioPage.objects.all()[0:5]
 
         return context
 
