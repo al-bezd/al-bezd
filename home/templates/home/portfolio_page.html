@@ -1,0 +1,39 @@
+{% exclude "base.html" %}
+{% block body_class %}single-portfolio single{% endblock %}
+
+{% block content %} 
+
+<section class="section">                    
+    <div class="portfolio-item-wrapper">
+        <div class="portfolio-content">    
+                                   
+
+            <div class="image-slider-wrapper relative block-right">
+                <div class="owl-carousel owl-theme image-slider slider" data-speed="2000" data-auto="false" data-hover="true">
+                    <div class="owl-item">
+                        <img src="/static/images/item1.jpg" alt="">
+                    </div>
+                    <div class="owl-item">
+                        <img src="/static/images/item2.jpg" alt="">
+                    </div>                              
+                    <div class="owl-item">
+                        <img src="/static/images/item3.jpg" alt="">
+                    </div>                               
+                </div>                                                            
+            </div>
+
+            <h2 class="title">ART OF CAMERA</h2>
+
+            <p class="section-des">
+                Two ghostly white figures in coveralls and helmets are softly dancing.
+            </p>
+
+            <p class="content-670">
+                Cras pretium metus pulvinar ultricies auctor. In varius purus blandit sem mollis tristique. Curabitur sed lorem vel ligula pulvinar porttitor. Proin sit amet mauris eleifend amet, ullamcorper lacus. Vangelis rich in heavy atoms descended from astronomers dream of the mind’s cras pretium metus pulvinar ultricies auctor in varius purus blandit.
+            </p>
+
+        </div>                                    
+    </div>                                                     
+</section> 
+
+{% endblock %}

@@ -15,22 +15,8 @@ class HomePage(Page):
 class PortfolioPage(Page):
     pass
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class SingleBlogPage(Page):
+    pass
 
 
 
@@ -39,24 +25,12 @@ class SocialMediaSettings(BaseSetting):
     class Meta:
         verbose_name = 'Социальные сети'
         verbose_name_plural = verbose_name
-    """Social media settings for our custom website."""
-
     vk = models.URLField(blank=True, null=True, help_text="VK URL")
     instagram = models.URLField(blank=True, null=True, help_text="Instagram URL")
-    #youtube = models.URLField(blank=True, null=True, help_text="YouTube Channel URL")
-
-    color_begin = ColorField(verbose_name='Цвет до наведения')
-    color_after = ColorField(verbose_name='Цвет после наведения')
-    transition  = models.FloatField(default=1, verbose_name='Время перетекания')
-
     panels = [
         MultiFieldPanel([
             FieldPanel("vk"),
             FieldPanel("instagram"),
-   
-            NativeColorPanel('color_begin'),
-            NativeColorPanel('color_after'),
-            FieldPanel("transition"),
         ], heading= 'Социальные сети')
     ]
 
