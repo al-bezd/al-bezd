@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>2048</title>
+    <script>
+        var ctx, canvas; //Canvas data
+        var gd = []; //Game data
+        var len = 4; //Size of the grid
+        function setup() {
+            //Initialize GD matrix
+            for (let i = 0; i < 4; i++){
+                gd[i] = [];
+            }
+            //Make a canvas
+            canvas = document.createElement("canvas");
+            canvas.width = 200;
+            canvas.height = 200;
+            document.body.appendChild(canvas);
+            document.body.onkeyup = key; //Handle keypress
+            ctx = canvas.getContext("2d");
+            ctx.font = "15px Arial";
+            //Draw a grid and fill game data
+            for (let i = 0; i < 4; i++){
+                for (let j = 0; j < 4; j++){
+                    ctx.rect(i * 50, j * 50, 50, 50);
+                    gd[i][j] = 0;
+                }
+            }
+            ctx.stroke();
+            //Generate 2 random tiles and print values
+            generate();
+            generate();
+            printValues();
+        }
+
+        function printValues() {
+            for (let i = 0; i < len; i++){
+                for (let j = 0; j < len; j++){
+                    //Erase previous value
+                    ctx.fillStyle = "#FFFFFF"
+                    ctx.fillRect(i * 50 + 1, j * 50 + 1, 48, 48);
+                    //Print new if > 0
+                    ctx.fillStyle = "#000000";
+                    if (gd[i][j] != 0)
+                        ctx.fillText(gd[i][j].toString(), i * 50 + 20, j * 50 + 30);
+                }
+            }
+        }
+
+        function key(event){
+            if (event.keyCode == 39){ //If right
+                moveRight();
+            } else if (event.keyCode == 40){ //If down
+                gd = rotateLeft(gd);
+                moveRight();
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+            } else if (event.keyCode == 37){ //If left
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+                moveRight();
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+            } else if (event.keyCode == 38){ //If up
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+                gd = rotateLeft(gd);
+                moveRight();
+                gd = rotateLeft(gd);
+            }
+            printValues(); // print new values
+        }
+
+        function seekMovable(){
+            for (let y = 0; y < len; y++){
+                for (let x = len - 2; x >= 0; x--){
+                    if (gd[x][y] > 0){
+                        if (gd[x + 1][y] == 0){
+                            return [x, y];
+                        }
+                    }
+                }
+            }
+            return [-1, -1];
+        }
+
+        function isMovable(){
+            for (let y = 0; y < len; y++){
+                for (let x = 0; x < len - 1; x++){
+                    if (gd[x][y] > 0){
+                        if (gd[x + 1][y] == 0){
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function generate(){
+            let randX, randY;
+            do {
+                randX = Math.floor(Math.random() * 4);
+                randY = Math.floor(Math.random() * 4);
+            } while (gd[randX][randY] != 0);
+            gd[randX][randY] = 2;
+        }
+
+        function moveRight(){
+                //Connect tiles
+                let moved = false; //Storage for 'did something move?'
+                for (let y = 0; y < len; y++){ //foreach in grid
+                    for (let x = len - 1; x > 0; x--){ 
+                        if (gd[x][y] > 0){ //If found a cell
+                            for (let xcurr = x - 1; xcurr >= 0; xcurr--){ //Look if there are any more cells to the left
+                                if (gd[xcurr][y] > 0){ //If cell > 0
+                                    if (gd[xcurr][y] == gd[x][y]){ //If first cell > 0 is equal to current cell
+                                        gd[x][y] *= 2; //Merge cells
+                                        gd[xcurr][y] = 0;
+                                        moved = true; //Moved = true if moved
+                                    }
+                                    break; //Break anyways
+                                }
+                            }
+                        }
+                    }
+                }
+                //Move tiles
+                while (isMovable()){ //While can move
+                    mov = seekMovable(); //Store movable cell
+                    //Move movable cell
+                    gd[mov[0] + 1][mov[1]] = gd[mov[0]][mov[1]];
+                    gd[mov[0]][mov[1]] = 0;
+                    moved = true; //Moved = true if moved
+                }
+                //Generate new if moved
+                if (moved){
+                    generate();
+                }
+        }
+
+        function rotateLeft(matrix){
+            let res = [];
+            for (let i = 0; i < matrix.length; i++){
+                res[i] = [];
+            }
+            for (let x = 0; x < matrix.length; x++){
+                for (let y = 0; y < matrix.length; y++){
+                    res[x][y] = matrix[matrix.length - y - 1][x]; //Rotation
+                }
+            }
+            return res;
+        }
+    </script>
+</head>
+<body onload="setup();">
+    
+</body>
+</html>

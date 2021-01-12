@@ -1,0 +1,32 @@
+{% load static %}
+    <head>
+        <title>     {% block title %}
+            {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}
+        {% endblock %}{% block title_suffix %}
+        {% with self.get_site.site_name as site_name %}
+            {% if site_name %}- {{ site_name }}{% endif %}
+        {% endwith %}
+    {% endblock %}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="shortcut icon" href="/static/images/favicon.ico">
+        <link href='https://fonts.googleapis.com/css?family=Poppins:200,400,500,700,800&display=swap' rel='stylesheet' type='text/css'>                     
+        <link rel="stylesheet" href="/static/css/clear.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-grid.css">        
+        <link rel="stylesheet" href="/static/css/prettyPhoto.css">
+        <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+
+        <!--[if lt IE 9]>
+            <script src="/static/js/html5shiv.js"></script>            
+            <script src="/static/js/respond.min.js"></script>                   
+        <![endif]-->  
+        
+        {% block extra_css %}
+        {% endblock %}
+    </head>
