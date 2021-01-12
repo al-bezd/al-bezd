@@ -1,0 +1,6 @@
+{% load wagtailcore_tags %}
+<ul>
+    {% for item in site_map %}
+        <li><a class="white-text" href="{% pageurl item %}">{{item.title}}</a></li>
+    {% endfor %}
+</ul>
