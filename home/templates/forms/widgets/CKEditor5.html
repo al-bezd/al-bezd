@@ -1,0 +1,32 @@
+<div class="container">
+
+    <div id="toolbar-containerCKeditor5_{{ widget.name }}"></div>
+    <div id="editorCKeditor5_{{ widget.name }}">
+        {% if widget.value %}{{ widget.value|safe }}{% endif %}
+    </div>
+    <textarea id="{{ widget.name }}"
+              name="{{ widget.name }}"
+              hidden>{% if widget.value %}{{ widget.value|safe }}{% endif %}</textarea>
+    <script>
+        DecoupledEditor
+        .create( document.querySelector( '#editorCKeditor5_{{ widget.name }}' ) )
+        .then( editor => {
+            const toolbarContainer = document.querySelector( '#toolbar-containerCKeditor5_{{ widget.name }}' );
+            toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+
+        } )
+        .catch( error => {
+            console.error( error );
+        } );
+        autosize($("#{{ widget.attrs.id|escapejs }}"));
+        console.log(`{% include 'django/forms/widgets/textarea.html' %}`)
+        $('#editorCKeditor5_{{ widget.name }}').bind('blur', function(){
+                jQuery('#{{ widget.name }}').text(`${jQuery('#editorCKeditor5_{{ widget.name }}').html()}`)
+        });
+        $('#editorCKeditor5_{{ widget.name }}').bind('downkey', function(){
+                jQuery('#{{ widget.name }}').text(`${jQuery('#editorCKeditor5_{{ widget.name }}').html()}`)
+        });
+    </script>
+</div>
+
+

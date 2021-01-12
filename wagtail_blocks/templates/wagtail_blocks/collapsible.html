@@ -1,0 +1,10 @@
+{% load wagtailcore_tags %}
+<div class="container"><ul class="collapsible">
+    {% for content in value.content %}
+        <li>
+            <div class="collapsible-header"><i class="material-icons">{{content.icon}}</i>{{content.name}}</div>
+            <div class="collapsible-body"><span>{{content.text}}</span></div>
+        </li>
+    {% endfor %}
+</ul></div>
+

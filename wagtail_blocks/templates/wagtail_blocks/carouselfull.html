@@ -1,0 +1,16 @@
+{% load wagtailcore_tags %}
+<div class="container">
+    <div class="carousel carousel-slider">
+      {% for image_item in value.content %}
+        <a class="carousel-item" href="{% if image_item.page %}{% pageurl image_item.page %}{%else%}#{%endif%}"><img class=""  src="{{ image_item.image.file.url }}"></a>
+      {% endfor %}
+  </div>
+</div>
+<script>
+
+$(document).ready(()=> {
+ $('.carousel.carousel-slider').carousel({fullWidth: true})
+})
+</script>
+
+

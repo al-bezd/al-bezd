@@ -1,0 +1,7 @@
+  {% load wagtailcore_tags %}
+  <div class="container">
+      <div class="collection">
+      {% for item in value.content %}
+        <a href="#!" class="collection-item"><span class="{{item.classname|safe }}">{{ item.value|safe }}</span>{{ item.name|safe }}</a>
+      {% endfor %}
+  </div></div>

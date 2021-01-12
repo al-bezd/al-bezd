@@ -1,0 +1,17 @@
+{% load wagtailcore_tags  wagtailimages_tags %}
+{% if main_page.get_ancestors|length > 1 %}
+<nav>
+    <div class="container">
+        <div class="nav-wrapper">
+            <div class="col s12">
+                {% for page in main_page.get_ancestors %}
+                    {% if page.is_root == False %}
+                        <a href="{% pageurl page %}" class="breadcrumb">{{page.title}}</a>
+                    {% endif %}
+                {% endfor %}
+                <a href="#" class="breadcrumb">{{main_page.title}}</a>
+            </div>
+        </div>
+    </div>
+</nav>
+{% endif %}

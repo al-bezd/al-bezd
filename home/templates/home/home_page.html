@@ -2,6 +2,12 @@
 {% load static %}
 {% block content %}
 
+    {% for block in page.body %}
+
+    {% include_block block with block_id=block.id %}
+
+    {% endfor %}
+
 
 <!-- ================== HOME ================== -->
 <section id="home" class="section">

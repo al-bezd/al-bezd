@@ -31,3 +31,9 @@ def site_map(context):
         'site_map': site_map,
         'request': context['request'],
     }
+
+
+
+@register.inclusion_tag('home/breadcrumbs_tag.html', takes_context=True)
+def breadcrumbs(context):
+    return {'main_page': context['self']}

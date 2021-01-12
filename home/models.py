@@ -1,16 +1,65 @@
 from django.db import models
 
-from wagtail.core.models import Page
 
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail_color_panel.fields import ColorField
-from wagtail_color_panel.edit_handlers import NativeColorPanel
+
 from django import forms
+
+from wagtail.admin.edit_handlers import StreamFieldPanel
+from wagtail.core.fields import StreamField, RichTextField
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.core.models import Page, AbstractPage
+from wagtail.search import index
+from home.blocks import SocialBlock
+from mysite.settings import dev
+from wagtail_blocks.blocks import default_blocks, RowBlock
+from wagtail.images.edit_handlers import ImageChooserPanel
+from django.template.defaultfilters import slugify as django_slugify
+from django.utils.translation import gettext_lazy as _
+
+alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i',
+            'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
+            'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
+            'я': 'ya'}
+
+
+def slugify(s):
+    return django_slugify(''.join(alphabet.get(w, w) for w in s.lower()))
 
 
 class HomePage(Page):
-    pass
+    body = StreamField(default_blocks() + [
+        ('Row', RowBlock()),
+        ('Social', SocialBlock())
+    ], blank=True)
+
+    content_panels = Page.content_panels + [
+        StreamFieldPanel("body", classname=""),
+    ]
+
+    PAGE_TEMPLATE_VAR = 'page'
+
+    def get_context(self, request, *args, **kwargs):
+        context = {
+            self.PAGE_TEMPLATE_VAR: self,
+            'self': self,
+            'request': request,
+        }
+
+        if self.context_object_name:
+            context[self.context_object_name] = self
+
+        context['menuitems'] = Page.objects.filter(
+            live=True,
+            show_in_menus=True
+        )
+
+        return context
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 class PortfolioPage(Page):
     pass
