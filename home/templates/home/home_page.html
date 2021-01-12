@@ -2,11 +2,7 @@
 {% load static wagtailuserbar i18n wagtailcore_tags wagtail_home_tags %}
 {% block content %}
 
-    {% for block in page.body %}
 
-    {% include_block block with block_id=block.id %}
-
-    {% endfor %}
 
 
 <!-- ================== HOME ================== -->

@@ -26,7 +26,6 @@ tablib==3.0.0
 Unidecode==1.1.2
 urllib3==1.26.2
 wagtail==2.11.3
-wagtail-color-panel==1.2.0
 webencodings==0.5.1
 Willow==1.4
 xlrd==2.0.1
