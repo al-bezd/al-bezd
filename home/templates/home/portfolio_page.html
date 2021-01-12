@@ -1,36 +1,30 @@
 {% extends "base.html" %}
 {% block body_class %}single-portfolio single{% endblock %}
 
-{% block content %} 
 
+{% block content %}
+{% load wagtailcore_tags wagtailimages_tags %}
 <section class="section">                    
     <div class="portfolio-item-wrapper">
         <div class="portfolio-content">    
                                    
-
+          
             <div class="image-slider-wrapper relative block-right">
                 <div class="owl-carousel owl-theme image-slider slider" data-speed="2000" data-auto="false" data-hover="true">
+                    {% for i in page.gallery_images.all %}
                     <div class="owl-item">
-                        <img src="/static/images/item1.jpg" alt="">
+                        {% image i.image width-400 %}
                     </div>
-                    <div class="owl-item">
-                        <img src="/static/images/item2.jpg" alt="">
-                    </div>                              
-                    <div class="owl-item">
-                        <img src="/static/images/item3.jpg" alt="">
-                    </div>                               
+                    {% endfor %}                             
                 </div>                                                            
             </div>
+           
 
-            <h2 class="title">ART OF CAMERA</h2>
+            <h2 class="title">{{page.name}}</h2>
 
-            <p class="section-des">
-                Two ghostly white figures in coveralls and helmets are softly dancing.
-            </p>
+            <p class="section-des" style="word-break: break-word;">{{ page.section_des|safe }}</p>
 
-            <p class="content-670">
-                Cras pretium metus pulvinar ultricies auctor. In varius purus blandit sem mollis tristique. Curabitur sed lorem vel ligula pulvinar porttitor. Proin sit amet mauris eleifend amet, ullamcorper lacus. Vangelis rich in heavy atoms descended from astronomers dream of the mind’s cras pretium metus pulvinar ultricies auctor in varius purus blandit.
-            </p>
+            <p class="content-670" style="word-break: break-word;">{{ page.body|safe }}</p>
 
         </div>                                    
     </div>                                                     

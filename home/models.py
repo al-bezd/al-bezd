@@ -5,15 +5,20 @@ from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 
 from django import forms
-
+from modelcluster.fields import ParentalKey
 from wagtail.admin.edit_handlers import StreamFieldPanel
 from wagtail.core.fields import StreamField, RichTextField
+
+from wagtail.core.fields import RichTextField
+from wagtail.admin.edit_handlers import FieldPanel
+
+
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
-from wagtail.core.models import Page, AbstractPage
+from wagtail.core.models import Page, AbstractPage, Orderable
 from wagtail.search import index
 from home.blocks import SocialBlock
 from mysite.settings import dev
-from wagtail_blocks.blocks import default_blocks, RowBlock
+from wagtail_blocks.blocks import default_blocks, RowBlock, CKEditor5Block
 from wagtail.images.edit_handlers import ImageChooserPanel
 from django.template.defaultfilters import slugify as django_slugify
 from django.utils.translation import gettext_lazy as _
@@ -32,10 +37,50 @@ class HomePage(Page):
     body = StreamField(default_blocks() + [
         ('Row', RowBlock()),
         ('Social', SocialBlock())
-    ], blank=True)
+    ])
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel("body", classname=""),
+        StreamFieldPanel("body"),
+    ]
+
+    PAGE_TEMPLATE_VAR = 'page'
+
+    def get_context(self, request, *args, **kwargs):
+        context = {
+            self.PAGE_TEMPLATE_VAR: self,
+            'self': self,
+            'request': request,
+        }
+
+        if self.context_object_name:
+            context[self.context_object_name] = self
+
+        context['menuitems'] = Page.objects.filter(
+            live=True,
+            show_in_menus=True
+        )
+        context['portfolio'] = PortfolioPage.objects.all().sort_by(
+            '-date_create')[0:5]
+
+        return context
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+
+class PortfolioPage(Page):
+    name = models.CharField(max_length=128)
+    section_des = models.TextField(blank=True, null=True) #section-des
+    body        = models.TextField(blank=True, null=True)#content-670
+
+    content_panels = Page.content_panels + [
+        FieldPanel('name'),
+        InlinePanel('gallery_images', label="Gallery images"),
+        FieldPanel("section_des", classname="full"),
+        FieldPanel("body", classname="full"),
+        
+
     ]
 
     PAGE_TEMPLATE_VAR = 'page'
@@ -61,12 +106,49 @@ class HomePage(Page):
         self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
-class PortfolioPage(Page):
-    pass
+
+class BlogPageGalleryImage(Orderable):
+    page = ParentalKey(PortfolioPage, on_delete=models.CASCADE,
+                       related_name='gallery_images')
+    image = models.ForeignKey(
+        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+    )
+  
+
+    panels = [
+        ImageChooserPanel('image'),
+     
+    ]
+
 
 class SingleBlogPage(Page):
-    pass
 
+    body = StreamField(
+        default_blocks() + [('Row', RowBlock()), ('Social', SocialBlock())], blank=True)
+    content_panels = Page.content_panels + [StreamFieldPanel("body")]
+
+    PAGE_TEMPLATE_VAR = 'page'
+
+    def get_context(self, request, *args, **kwargs):
+        context = {
+            self.PAGE_TEMPLATE_VAR: self,
+            'self': self,
+            'request': request,
+        }
+
+        if self.context_object_name:
+            context[self.context_object_name] = self
+
+        context['menuitems'] = Page.objects.filter(
+            live=True,
+            show_in_menus=True
+        )
+
+        return context
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 
 @register_setting
@@ -75,13 +157,15 @@ class SocialMediaSettings(BaseSetting):
         verbose_name = 'Социальные сети'
         verbose_name_plural = verbose_name
     vk = models.URLField(blank=True, null=True, help_text="VK URL")
-    instagram = models.URLField(blank=True, null=True, help_text="Instagram URL")
+    instagram = models.URLField(
+        blank=True, null=True, help_text="Instagram URL")
     panels = [
         MultiFieldPanel([
             FieldPanel("vk"),
             FieldPanel("instagram"),
-        ], heading= 'Социальные сети')
+        ], heading='Социальные сети')
     ]
+
 
 @register_setting
 class ContactSettings(BaseSetting):
@@ -89,9 +173,11 @@ class ContactSettings(BaseSetting):
         verbose_name = 'Контакты'
         verbose_name_plural = verbose_name
 
-    tel1     = models.CharField(max_length=12, blank=True, null=True, help_text="Телефон №1", verbose_name="Телефон №1")
-    tel2     = models.CharField(max_length=12, blank=True, null=True, help_text="Телефон №2", verbose_name="Телефон №2")
-    email    = models.EmailField(blank=True, null=True, verbose_name="Email")
+    tel1 = models.CharField(max_length=12, blank=True, null=True,
+                            help_text="Телефон №1", verbose_name="Телефон №1")
+    tel2 = models.CharField(max_length=12, blank=True, null=True,
+                            help_text="Телефон №2", verbose_name="Телефон №2")
+    email = models.EmailField(blank=True, null=True, verbose_name="Email")
 
     panels = [
         MultiFieldPanel([
