@@ -34,18 +34,16 @@ def slugify(s):
 
 
 class HomePage(Page):
-    #body = StreamField(default_blocks() + [
-    #    ('Row', RowBlock()),
-    #    ('Social', SocialBlock())
-    #])
-    skills = StreamField([
-        ('Table',Table())
-        ])
 
+   
     content_panels = Page.content_panels + [
-        #StreamFieldPanel("body"),
-        StreamFieldPanel('skills'),
+        
+        InlinePanel('skills', panels=[
+            FieldPanel('name'),
+            FieldPanel('percent'),
+        ], label="Навыки")
     ]
+
 
     PAGE_TEMPLATE_VAR = 'page'
 
@@ -72,6 +70,11 @@ class HomePage(Page):
         super().save(*args, **kwargs)
 
 
+
+class HomePageInline(Orderable, models.Model):
+    page = ParentalKey(HomePage, related_name='skills')
+    name = models.CharField(max_length=50)
+    percent = models.IntegerField(default=0)
 
 
 class PortfolioPage(Page):
