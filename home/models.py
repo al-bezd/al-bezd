@@ -186,3 +186,19 @@ class ContactSettings(BaseSetting):
 
         ], heading="Контакты")
     ]
+
+@register_setting
+class PhotoMainPageSettings(BaseSetting):
+    class Meta:
+        verbose_name = 'Фотографии главной страницы'
+        verbose_name_plural = verbose_name
+
+    main_photo = models.ForeignKey(
+        'wagtailimages.Image', null=True, on_delete=models.SET_NULL, related_name='+')
+    contact_photo = models.ForeignKey(
+        'wagtailimages.Image', null=True, on_delete=models.SET_NULL, related_name='+')
+
+    panels = [
+        ImageChooserPanel('main_photo'),
+        ImageChooserPanel('contact_photo'),
+    ]
