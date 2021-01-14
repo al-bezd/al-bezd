@@ -37,7 +37,12 @@ class HomePage(Page):
 
    
     content_panels = Page.content_panels + [
-        
+
+        InlinePanel('skills_history', panels=[
+            FieldPanel('title'),
+            FieldPanel('desc'),
+        ], label="История навыков"),
+
         InlinePanel('skills', panels=[
             FieldPanel('name'),
             FieldPanel('percent'),
@@ -75,6 +80,11 @@ class HomePageInline(Orderable, models.Model):
     page = ParentalKey(HomePage, related_name='skills')
     name = models.CharField(max_length=50)
     percent = models.IntegerField(default=0)
+
+class HomePageSkillsHistort(Orderable, models.Model):
+    page = ParentalKey(HomePage, related_name='skills_history')
+    title = models.CharField(max_length=50)
+    desc = RichTextField(null=True, blank=True)
 
 
 class PortfolioPage(Page):

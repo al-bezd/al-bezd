@@ -21,7 +21,7 @@
 <section id="services" class="section">
 
     <div class="content-670">
-        <h2 class="title">СЕРВИСЫ</h2>
+        <h2 class="title">УСЛУГИ</h2>
         <div class="section-des">
             Lorem ipsum dolor sit amet consectetu adipiscing elit viverra tristique placerat
         </div>
@@ -107,7 +107,7 @@
         </li>
         <li>
             <h6>ROLE</h6>
-            <span>Программист</span>
+            <span>FullStack Программист</span>
         </li>
         <li>
             <h6>PHONE</h6>
@@ -283,38 +283,12 @@
     </p>
 
     <ul class="skills-history block-right">
+        {% for skill in page.skills_history.all %}
         <li>
-            <span class="date">2016</span>
-            <p>
-                <strong>2015 - 2016</strong> placerat in massa consectetur quisque. Nunc ac fames lectus in libero
-                aliquet est setera nunc.
-            </p>
+            <span class="date">{{skill.title}}</span>
+            {{skill.desc|safe }}
         </li>
-
-        <li>
-            <span class="date">2017</span>
-            <p>
-                <strong>2016 - 2017</strong> Turpis metus sit diam purus leo in variusquam. Nunc amet tristique volutpat
-                adipiscing vulputate phasellus. Eget enim aliquam euismod mauris in vitae viverra blandit lectus diam
-                feugiat.
-            </p>
-        </li>
-
-        <li>
-            <span class="date">2019</span>
-            <p>
-                <strong>2020 - 2021</strong> Nunc amet tristique volutpat adipiscing vulputate phasellus. Eget enim
-                aliquam euismod.
-            </p>
-        </li>
-
-        <li>
-            <span class="date">2023</span>
-            <p>
-                <strong>2022 - 2026</strong> Eget enim aliquam euismod mauris in vitae viverra blandit lectus faucibus
-                diam consequat maecenas turpis metus sit diam purus leo in varius.
-            </p>
-        </li>
+        {% endfor %}
     </ul>
 
     <ul class="skills-progress">
