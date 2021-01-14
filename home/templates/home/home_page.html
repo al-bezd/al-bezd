@@ -318,61 +318,19 @@
     </ul>
 
     <ul class="skills-progress">
+
+        {% for skill in page.skills.all %}
+
         <li>
-            <span class="name">PHOTOSHOP</span>
+            <span class="name">{{skill.name|upper}}</span>
             <div class="skill">
-                <div class="skill-fill" data-fill="55%"></div>
+                <div class="skill-fill" data-fill="{{skill.percent}}%"></div>
             </div>
         </li>
 
-        <li>
-            <span class="name">ILLUSTRATOR</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="68%"></div>
-            </div>
-        </li>
+        {% endfor %}
 
-        <li>
-            <span class="name">MARKETING</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="80%"></div>
-            </div>
-        </li>
-
-        <li>
-            <span class="name">CREATIVITY</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="43%"></div>
-            </div>
-        </li>
-
-        <li>
-            <span class="name">AFFINITY</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="55%"></div>
-            </div>
-        </li>
-
-        <li>
-            <span class="name">LANGUAGES</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="68%"></div>
-            </div>
-        </li>
-
-        <li>
-            <span class="name">EDUCATION</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="80%"></div>
-            </div>
-        </li>
-
-        <li>
-            <span class="name">РАЗРАБОТКА</span>
-            <div class="skill">
-                <div class="skill-fill" data-fill="43%"></div>
-            </div>
-        </li>
+        
     </ul>
 
 </section>
@@ -394,8 +352,8 @@
 
     <a href="https://www.google.com/maps/place/Central+Park/@40.7828647,-73.9653551,15z/data=!4m5!3m4!1s0x0:0xb9df1f7387a94119!8m2!3d40.7828647!4d-73.9653551"
         target="_blank">
-        <img class="block-right" src="/static/images/map.png" alt="">
-        {% image settings.home.PhotoMainPageSettings.contact_photo  width-470   class="block-right" %}
+        
+        {% image settings.home.PhotoMainPageSettings.contact_photo  width-740   class="block-right" %}
     </a>
 
     <div class="content-670">
