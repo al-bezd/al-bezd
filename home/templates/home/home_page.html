@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 {% load static wagtailuserbar i18n wagtailcore_tags wagtail_home_tags %}
+{% load wagtailsettings_tags wagtailimages_tags   %}
+
 {% block content %}
 
-
+{% get_settings use_default_site=True %}
 
 
 <!-- ================== HOME ================== -->
 <section id="home" class="section">
     <div class="container-wrap">
         <h1 class="entry-title" data-jarallax-element="0 30">Привет <br>Я <span>Александр Безденежных</span></h1>
-        <img class="main-photo block-right" data-jarallax-element="0 -30" src="/static/images/photo-1.jpg" alt="">
+        {% image settings.home.PhotoMainPageSettings.main_photo  width-470   class="main-photo block-right" data-jarallax-element="0 -30" %}
         <a href="#services" class="main-btn slow-scroll"><img src="/static/images/scroll-icon.svg" alt=""></a>
     </div>
 </section>
@@ -19,7 +21,7 @@
 <section id="services" class="section">
 
     <div class="content-670">
-        <h2 class="title">SERVICES</h2>
+        <h2 class="title">СЕРВИСЫ</h2>
         <div class="section-des">
             Lorem ipsum dolor sit amet consectetu adipiscing elit viverra tristique placerat
         </div>
@@ -46,7 +48,7 @@
 
             <div class="serv-block-item">
                 <img src="/static/images/serv-icon-1.svg" alt="">
-                <h4>DESIGN</h4>
+                <h4>ДИЗАЙН</h4>
                 <p>
                     A full stack allaround designer that may or may not include a guide for specific createive
                 </p>
@@ -54,7 +56,7 @@
 
             <div class="serv-block-item">
                 <img src="/static/images/serv-icon-2.svg" alt="">
-                <h4>DEVELOP</h4>
+                <h4>РАЗРАБОТКА</h4>
                 <p>
                     Tellus pharetra erat tristique erat donec dignissim etiam sed malesuada enim sodales
                 </p>
@@ -62,7 +64,7 @@
 
             <div class="serv-block-item">
                 <img src="/static/images/serv-icon-3.svg" alt="">
-                <h4>WRITE</h4>
+                <h4>НАСТРОЙКА</h4>
                 <p>
                     A full stack allaround designer that may or may not include a guide for specific createive
                 </p>
@@ -70,7 +72,7 @@
 
             <div class="serv-block-item">
                 <img src="/static/images/serv-icon-4.svg" alt="">
-                <h4>PROMOTE</h4>
+                <h4>ПРОДВИЖЕНИЕ</h4>
                 <p>
                     Tellus pharetra erat tristique erat donec dignissim etiam sed malesuada enim sodales
                 </p>
@@ -83,7 +85,7 @@
 
 <!-- ==================== ABOUT ==================== -->
 <section id="about" class="section">
-    <h2 class="title">ABOUT</h2>
+    <h2 class="title">ОБО МНЕ</h2>
     <div class="section-des">
         Viverra tristique placerat massa est consectetur quisque nu fames lorem ipsum dolor sit amet consectetu.
     </div>
@@ -101,15 +103,15 @@
     <ul class="about-info" data-threshold="0 0" data-jarallax-element="40 0">
         <li>
             <h6>EMAIL</h6>
-            <a href="mailto:jackob@yourwebsite.com">jackob@yourwebsite.com</a>
+            <a href="mailto:{{settings.home.ContactSettings.email}}">{{settings.home.ContactSettings.email}}</a>
         </li>
         <li>
             <h6>ROLE</h6>
-            <span>Lead Designer</span>
+            <span>Программист</span>
         </li>
         <li>
             <h6>PHONE</h6>
-            <a href="tel:+987987654321">(+987) 987 654 321</a>
+            <a href="tel:{{settings.home.ContactSettings.tel1}}">{{settings.home.ContactSettings.tel1}}</a>
         </li>
     </ul>
 
@@ -142,7 +144,7 @@
 
 <!-- ==================== PORTFOLIO ==================== -->
 <section id="portfolio" class="section">
-    <h2 class="title">PORTFOLIO</h2>
+    <h2 class="title">ПОРТФОЛИО</h2>
     <div class="section-des">
         Viverra tristique placerat massa est consectetur quisque nu fames lorem ipsum dolor sit amet consectetu.
     </div>
@@ -218,7 +220,7 @@
 
 <!-- ==================== BLOG ==================== -->
 <section id="blog" class="section">
-    <h2 class="title">BLOG</h2>
+    <h2 class="title">БЛОГ</h2>
     <div class="section-des">
         Viverra tristique placerat massa est consectetur quisque nu fames lorem
     </div>
@@ -270,7 +272,7 @@
 
 <!-- ================== SKILLS ================== -->
 <section id="skills" class="section">
-    <h2 class="title">SKILLS</h2>
+    <h2 class="title">НАВЫКИ</h2>
     <div class="section-des">
         Lorem ipsum dolor sit amet consectetu adipiscing elit viverra tristique placerat
     </div>
@@ -366,7 +368,7 @@
         </li>
 
         <li>
-            <span class="name">DEVELOPING</span>
+            <span class="name">РАЗРАБОТКА</span>
             <div class="skill">
                 <div class="skill-fill" data-fill="43%"></div>
             </div>
@@ -378,7 +380,7 @@
 
 <!-- ==================== ABOUT ==================== -->
 <section id="contact" class="section">
-    <h2 class="title">CONTACT</h2>
+    <h2 class="title">КОНТАКТЫ</h2>
     <div class="section-des">
         Lorem ipsum dolor sit amet consectetu adipiscing elit viverra tristique placerat.
     </div>
@@ -393,24 +395,25 @@
     <a href="https://www.google.com/maps/place/Central+Park/@40.7828647,-73.9653551,15z/data=!4m5!3m4!1s0x0:0xb9df1f7387a94119!8m2!3d40.7828647!4d-73.9653551"
         target="_blank">
         <img class="block-right" src="/static/images/map.png" alt="">
+        {% image settings.home.PhotoMainPageSettings.contact_photo  width-470   class="block-right" %}
     </a>
 
     <div class="content-670">
         <div class="contact-form">
             <p>
-                <input id="name" type="text" name="your-name" placeholder="NAME">
+                <input id="name" type="text" name="your-name" placeholder="ИМЯ">
             </p>
             <p>
                 <input id="contact-email" type="email" name="your-email" placeholder="EMAIL">
             </p>
             <p>
-                <input id="subject" type="text" name="your-subject" placeholder="SUBJECT">
+                <input id="subject" type="text" name="your-subject" placeholder="ТЕМА">
             </p>
             <p>
-                <textarea id="message" name="your-message" placeholder="MESSAGE"></textarea>
+                <textarea id="message" name="your-message" placeholder="СООБЩЕНИЕ"></textarea>
             </p>
             <p class="contact-submit-holder">
-                <input type="submit" value="SEND">
+                <input type="submit" value="ОТПРАВИТЬ">
             </p>
         </div>
     </div>

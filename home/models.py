@@ -1,7 +1,7 @@
 from django.db import models
 
 
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 
 from django import forms
@@ -13,10 +13,10 @@ from wagtail.core.fields import RichTextField
 from wagtail.admin.edit_handlers import FieldPanel
 
 
-from wagtail.admin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
 from wagtail.core.models import Page, AbstractPage, Orderable
 from wagtail.search import index
-from home.blocks import SocialBlock
+from home.blocks import SocialBlock, Table
 from mysite.settings import dev
 from wagtail_blocks.blocks import default_blocks, RowBlock, CKEditor5Block
 from wagtail.images.edit_handlers import ImageChooserPanel
@@ -34,13 +34,17 @@ def slugify(s):
 
 
 class HomePage(Page):
-    body = StreamField(default_blocks() + [
-        ('Row', RowBlock()),
-        ('Social', SocialBlock())
-    ])
+    #body = StreamField(default_blocks() + [
+    #    ('Row', RowBlock()),
+    #    ('Social', SocialBlock())
+    #])
+    skills = StreamField([
+        ('Table',Table())
+        ])
 
     content_panels = Page.content_panels + [
-        StreamFieldPanel("body"),
+        #StreamFieldPanel("body"),
+        StreamFieldPanel('skills'),
     ]
 
     PAGE_TEMPLATE_VAR = 'page'
@@ -68,10 +72,12 @@ class HomePage(Page):
         super().save(*args, **kwargs)
 
 
+
+
 class PortfolioPage(Page):
     name = models.CharField(max_length=128)
     section_des = models.TextField(blank=True, null=True) #section-des
-    body        = models.TextField(blank=True, null=True)#content-670
+    body        = models.TextField(blank=True, null=True) #content-670
 
     content_panels = Page.content_panels + [
         FieldPanel('name'),
