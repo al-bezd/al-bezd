@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 
     #'wagtailfontawesome',
     'wagtail_blocks',
+    'message_sender',
     
 ]
 

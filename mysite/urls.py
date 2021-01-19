@@ -16,6 +16,9 @@ urlpatterns = [
 
     path('search/', search_views.search, name='search'),
 
+
+    path('msg/', include('message_sender.urls'), name='msg'),
+
 ]
 
 
