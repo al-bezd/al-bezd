@@ -20,4 +20,4 @@ def send(request):
         else:
             context['err_reciver'].append({'err':f'{result}','text':i})
 
-    return render(request, 'message_sender\index.html', context)
+    return render(request, 'message_sender/index.html', context)
