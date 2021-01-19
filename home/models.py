@@ -1,5 +1,6 @@
 from django.db import models
-
+from modelcluster.models import ClusterableModel
+from wagtail.admin import edit_handlers
 
 from wagtail.admin.edit_handlers import MultiFieldPanel
 from wagtail.contrib.settings.models import BaseSetting, register_setting
@@ -14,7 +15,7 @@ from wagtail.admin.edit_handlers import FieldPanel
 
 
 from wagtail.admin.edit_handlers import FieldPanel, InlinePanel
-from wagtail.core.models import Page, AbstractPage, Orderable
+from wagtail.core.models import Page, AbstractPage, Orderable, PageBase
 from wagtail.search import index
 from home.blocks import SocialBlock, Table
 from mysite.settings import dev
@@ -33,17 +34,45 @@ def slugify(s):
     return django_slugify(''.join(alphabet.get(w, w) for w in s.lower()))
 
 
-class HomePage(Page):
+def set_promote_panels():
+    return [
+        MultiFieldPanel([
+            FieldPanel('keywords'),
+            FieldPanel('slug'),
+            FieldPanel('seo_title'),
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+        ], heading='ОБЩИЕ НАСТРОЙКИ СТРАНИЦ')
+    ]
 
-   
-    content_panels = Page.content_panels + [
-        
+
+class HomePage(Page):
+    keywords = models.TextField(blank=True, null=True, verbose_name=_('keywords'), help_text=_("Ключевые слова для индексации поисковыми роботами"))
+
+    contact_title = RichTextField(blank=True, null=True)
+    contact_text = RichTextField(blank=True, null=True)
+
+    skill_title = RichTextField(blank=True, null=True)
+    skill_text = RichTextField(blank=True, null=True)
+
+    content_panels = Page.content_panels +[
+        FieldPanel('skill_title'),
+        FieldPanel('skill_text', classname="content-670"),
         InlinePanel('skills', panels=[
             FieldPanel('name'),
             FieldPanel('percent'),
-        ], label="Навыки")
+        ], label="Навыки"),
+        InlinePanel('skillshistory',panels=[
+            FieldPanel('name'),
+            FieldPanel('text')
+        ], label="История приобретения навыков"),
+
+        FieldPanel('contact_title'),
+        FieldPanel('contact_text'),
+
     ]
 
+    promote_panels = set_promote_panels()
 
     PAGE_TEMPLATE_VAR = 'page'
 
@@ -76,6 +105,11 @@ class HomePageInline(Orderable, models.Model):
     name = models.CharField(max_length=50)
     percent = models.IntegerField(default=0)
 
+
+class HomePageSkillsHistory(Orderable, models.Model):
+    page = ParentalKey(HomePage, related_name='skillshistory')
+    name = models.CharField(max_length=50)
+    text = RichTextField(blank=True,null=True)
 
 class PortfolioPage(Page):
     name = models.CharField(max_length=128)
@@ -173,7 +207,6 @@ class SocialMediaSettings(BaseSetting):
             FieldPanel("instagram"),
         ], heading='Социальные сети')
     ]
-
 
 @register_setting
 class ContactSettings(BaseSetting):
