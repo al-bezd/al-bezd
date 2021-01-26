@@ -7,29 +7,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reader</title>
 
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="/static/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- Compiled and minified JavaScript -->
-    <script src="/static/js/jquery351.js" ></script>
-    <script src="/static/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="/static/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified JavaScript -->
+  <script src="/static/js/jquery351.js"></script>
+  <script src="/static/js/materialize.min.js"></script>
+  <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
+  <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
 
 
 </head>
 
 <body>
 
-  
+
   <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Atack of titans</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="javascript:CheckChapter('118')">118</a></li>
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Reader</a>
+      <ul id="nav" class="right hide-on-med-and-down">
+        
       </ul>
 
       <ul id="nav-mobile" class="sidenav">
-        <li><a href="javascript:CheckChapter('118')">118</a></li>
+       
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
@@ -37,90 +37,142 @@
 
 
 
-    <div class="">
-      <div class="row">
-        <div id="js-carousel-1" class="owl-carousel">
-
-        
-
-        </div>
-
-      </div>
-
-      <div class="row center">
-        <div class="col s6 m6 l6" ><a style="width: 100%;" class="btn-large" id="prev" ><</a></div>
-        <div class="col s6 m6 l6" ><a style="width: 100%;" class="btn-large" id="next" >></a></div>
-      </div>
-
+  <div class="">
+    <div class="row" id="base">
+      <div id="js-carousel-1" class="owl-carousel"></div>
 
     </div>
 
+    <div class="row center">
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large" id="prev"> < </a></div>
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large" id="next"> > </a></div>
+    </div>
+
+
+  </div>
+
 
   <!--  Scripts-->
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="/static/js/materialize.js"></script>
   <script src="/static/js/init.js"></script>
   <script src="/static/js/owl.carousel.min.js"></script>
   <script>
 
 
-  $(document).ready(()=>{
-    function checkExists(imageUrl, callback) {
-      var img = new Image();
-  
-      img.onerror = function() {
-          callback(false);
-      };
-  
-      img.onload = function() {
-          callback(true);
-      };
-  
-      img.src = imageUrl;
-  }
+    $(document).ready(() => {
 
-    function CheckChapter(chapter){
-      $('#js-carousel-1').html('')
-        for(var i=1; i<45; i++){
-          //['jpg','png'].forEach((format)=>{
-            format = 'jpg'
-            link = `/static/img/${chapter}/${i<10?'0'+ String(i):i}_fan-naruto.ru.${format}`
-            template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
-            $('#js-carousel-1').append(template)
-            //checkExists(link,(exists)=>{
-            //  if(exists) {
-            //    $('#js-carousel-1').append(template)
-            //  }
-            //})
-          //})
+      axios.get('/AtackTitans/getChapters',{params:{manga:'AtackTitans'}})
+        .then((response)=>{
+          chapters = response.data.chapters
+          chapters = chapters.reverse()
+          response.data.chapters.forEach((chapter)=>{
+            template = `<li><a class="CheckChapter">${chapter}</a></li>`
+            
+            $('#nav').append(template)
+            $('#nav-mobile').append(template)
+          })
+          $('.CheckChapter').click((i) => {
+            CheckChapter(i.target.text)
+          })
+     
+
+        })
+        .catch((err)=>{
+          swal(`${err}`)
+        })
+
+
+
+
+      function preloadImages(array) {
+        if (!preloadImages.list) {
+          preloadImages.list = [];
         }
-    }
-    
-    CheckChapter('118')
+        var list = preloadImages.list;
+        for (var i = 0; i < array.length; i++) {
+          var img = new Image();
+          img.onload = function () {
+            var index = list.indexOf(this);
+            if (index !== -1) {
+              // remove image from the array once it loaded
+              // for memory consumption reasons
+              list.splice(index, 1);
+            }
+          }
+          list.push(img);
+          img.src = array[i];
+        }
+      }
 
-    var owl = $('.owl-carousel')
+      function CheckChapter(chapter) {
 
-    owl.owlCarousel({
-        items: 1,
-        mouseDrag:false,
-        pullDrag:false,
-        touchDrag:false
+        
+
+        $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
+   
+        var pages = []
+        axios.get('/AtackTitans/getLinks',{params:{manga:'AtackTitans',chapter:chapter}})
+        .then((response)=>{
+          response.data.pages.forEach((page)=>{
+
+          //format = 'jpg'
+          //link = `/static/img/${chapter}/${i < 10 ? '0' + String(i) : i}_fan-naruto.ru.${format}`
+          link = page
+          template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
+          pages.push(link)
+          $('#js-carousel-1').append(template)
+
+          })
+          initOwl()
+
+        })
+        .catch((err)=>{
+          swal(`${err}`)
+        })
+
+
+        
+
+
+        //preloadImages(pages)
+      }
+      
+      function initOwl(){
+
+        var owl = $('.owl-carousel')
+        
+
+        owl.owlCarousel({
+          items: 1,
+          mouseDrag: false,
+          pullDrag: false,
+          touchDrag: false
+        })
+
+        $('#prev').click(() => {
+          owl.trigger('prev.owl.carousel');
+        })
+
+        $('#next').click(() => {
+          owl.trigger('next.owl.carousel')
+        })
+
+      }
+
+      
+
+
+
+      $('.img').css({ 'width': `${window.innerWidth}px` })
+
+      
+
+
+
+
     })
-
-    $('#prev').click(()=>{
-      owl.trigger('prev.owl.carousel');
-    })
-
-    $('#next').click(()=> {
-      owl.trigger('next.owl.carousel')
-    })
-
-    $('.img').css({'width':`${window.innerWidth}px`})
-
-
-
-
-  })
 
 
   </script>
