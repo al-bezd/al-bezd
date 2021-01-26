@@ -25,11 +25,11 @@
   <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Atack of titans</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Atack of titans</a></li>
+        <li><a href="javascript:CheckChapter('118')">118</a></li>
       </ul>
 
       <ul id="nav-mobile" class="sidenav">
-        <li><a href="#">Atack of titans</a></li>
+        <li><a href="javascript:CheckChapter('118')">118</a></li>
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
@@ -41,14 +41,7 @@
       <div class="row">
         <div id="js-carousel-1" class="owl-carousel">
 
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
-          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+        
 
         </div>
 
@@ -72,6 +65,39 @@
 
 
   $(document).ready(()=>{
+    function checkExists(imageUrl, callback) {
+      var img = new Image();
+  
+      img.onerror = function() {
+          callback(false);
+      };
+  
+      img.onload = function() {
+          callback(true);
+      };
+  
+      img.src = imageUrl;
+  }
+
+    function CheckChapter(chapter){
+      $('#js-carousel-1').html('')
+        for(var i=1; i<45; i++){
+          //['jpg','png'].forEach((format)=>{
+            format = 'jpg'
+            link = `/static/img/${chapter}/${i<10?'0'+ String(i):i}_fan-naruto.ru.${format}`
+            template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
+            $('#js-carousel-1').append(template)
+            //checkExists(link,(exists)=>{
+            //  if(exists) {
+            //    $('#js-carousel-1').append(template)
+            //  }
+            //})
+          //})
+        }
+    }
+    
+    CheckChapter('118')
+
     var owl = $('.owl-carousel')
 
     owl.owlCarousel({
@@ -90,7 +116,12 @@
     })
 
     $('.img').css({'width':`${window.innerWidth}px`})
+
+
+
+
   })
+
 
   </script>
 
