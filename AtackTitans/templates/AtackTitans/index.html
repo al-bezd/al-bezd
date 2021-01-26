@@ -73,7 +73,10 @@
     var owl = $('.owl-carousel')
 
     owl.owlCarousel({
-        items: 1 // А по-умолчанию 3
+        items: 1,
+        mouseDrag:false,
+        pullDrag:false,
+        touchDrag:false
     })
 
     $('#prev').click(()=>{
