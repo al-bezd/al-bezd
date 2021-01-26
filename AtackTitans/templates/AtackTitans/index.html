@@ -8,64 +8,84 @@
 
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="/static/css/materialize.min.css">
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- Compiled and minified JavaScript -->
     <script src="/static/js/jquery351.js" ></script>
     <script src="/static/js/materialize.min.js"></script>
-    <script src="/static/js/init.js" ></script>
+    <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
+
+
 </head>
 
 <body>
+
   
   <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Atack of titans</a>
       <ul class="right hide-on-med-and-down">
-        <li><a href="#">Navbar Link</a></li>
+        <li><a href="#">Atack of titans</a></li>
       </ul>
 
       <ul id="nav-mobile" class="sidenav">
-        <li><a href="#">Navbar Link</a></li>
+        <li><a href="#">Atack of titans</a></li>
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
-  <div class="section no-pad-bot" id="index-banner">
-    <div class="container">
-        <div class="carousel carousel-slider center">
 
-    <div class="carousel-item red white-text" href="#one!">
+
+    <div class="">
+      <div class="row">
+        <div id="js-carousel-1" class="owl-carousel">
+
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+          <div class=""><img class="img" src="https://via.placeholder.com/1500" alt=""></div>
+
+        </div>
+
+      </div>
+
+      <div class="row center">
+        <div class="col s6 m6 l6" ><a style="width: 100%;" class="btn-large" id="prev" ><</a></div>
+        <div class="col s6 m6 l6" ><a style="width: 100%;" class="btn-large" id="next" >></a></div>
+      </div>
+
 
     </div>
-    <div class="carousel-item amber white-text" href="#two!">
-p>
-    </div>
-    <div class="carousel-item green white-text" href="#three!">
 
-    </div>
-    <div class="carousel-item blue white-text" href="#four!">
-
-    </div>
-  </div>
-
-    </div>
-  </div>
 
   <!--  Scripts-->
   
   <script src="/static/js/materialize.js"></script>
   <script src="/static/js/init.js"></script>
-
+  <script src="/static/js/owl.carousel.min.js"></script>
   <script>
-    //M.AutoInit()
-    $('.carousel.carousel-slider').carousel({
-      fullWidth: true,
-      //noWrap:true,
-      //duration:0
+
+
+  $(document).ready(()=>{
+    var owl = $('.owl-carousel')
+
+    owl.owlCarousel({
+        items: 1 // А по-умолчанию 3
     })
 
-    $(document).ready(function(){
-      $('.materialboxed').materialbox();
+    $('#prev').click(()=>{
+      owl.trigger('prev.owl.carousel');
     })
+
+    $('#next').click(()=> {
+      owl.trigger('next.owl.carousel')
+    })
+
+    $('.img').css({'width':`${window.innerWidth}px`})
+  })
 
   </script>
 
