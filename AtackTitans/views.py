@@ -25,7 +25,7 @@ def getLinks(request):
 
 def getChapters(request):
     manga = request.GET['manga']
-    path = '' + os.path.abspath(os.curdir) + '\\AtackTitans\\static\\img\\{manga}\\*'.replace('\\', '/')
+    path = '' + os.path.abspath(os.curdir) + '\\AtackTitans\\static\\img\\'+manga+'\\*'.replace('\\', '/')
     chapters = glob.glob(path)
     chapters = [i.split('\\')[-1] for i in chapters]
     return JsonResponse({'manga': manga, 'chapters': chapters})
