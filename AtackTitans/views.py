@@ -28,4 +28,8 @@ def getChapters(request):
     path = path.replace('\\', '/')
     chapters = glob.glob(path)
     chapters = [i.split('\\')[-1] for i in chapters]
+    if len(chapters)==0:
+        chapters = ["087", "088", "089", "090", "091", "092", "093", "094", "095", "096", "097", "098", "099", "100", "101", "102",
+         "103", "104", "105b", "106b", "107b", "108b", "109beta", "110beta", "111b", "112beta", "113b", "114bt",
+         "115bt", "116bt", "117bt", "118"]
     return JsonResponse({'manga': manga, 'chapters': chapters})
