@@ -16,7 +16,7 @@ def getChapters(request):
         chapters = glob.glob(path)
         chapters = [i.split('\\')[-1].replace('\\', '/') for i in chapters]
         #chapters = [i.replace('\\', '/') for i in chapters]
-    return JsonResponse({'manga': manga, 'chapters': chapters,'curdir':os.path.abspath(os.curdir)})
+    return JsonResponse({'manga': manga, 'chapters': chapters,'curdir':os.path.abspath(os.curdir).replace('mysite','AtackTitans')})
 
 
 
