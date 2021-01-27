@@ -11,7 +11,7 @@ def getChapters(request):
     chapters = [i.split('\\')[-1].replace('\\', '/') for i in chapters]
     #chapters = [i.split('\\')[-1] for i in chapters]
     if len(chapters) == 0:
-        path = '' + os.path.abspath(os.curdir).replace('mysite','AtackTitans') + '\\static\\img\\' + manga + '\\*'
+        path = '' + os.path.abspath(os.curdir).replace('mysite','AtackTitans') + '\\AtackTitans\\static\\img\\' + manga + '\\*'
         path = path.replace('\\', '/')
         chapters = glob.glob(path)
         chapters = [i.split('\\')[-1].replace('\\', '/') for i in chapters]
