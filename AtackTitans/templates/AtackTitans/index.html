@@ -63,27 +63,40 @@
 
     $(document).ready(() => {
 
-      axios.get('/AtackTitans/getChapters',{params:{manga:'AtackTitans'}})
+      var manga   = window.localStorage.getItem('manga')
+      var chapter = window.localStorage.getItem('chapter')
+      var page    = window.localStorage.getItem('page')
+
+      if (manga === null){
+        manga='AtackTitans'
+      }
+
+      axios.get('/AtackTitans/getChapters',{params:{manga:manga}})
         .then((response)=>{
           chapters = response.data.chapters
           chapters = chapters.reverse()
           response.data.chapters.forEach((chapter)=>{
-            template = `<li><a class="CheckChapter">${chapter}</a></li>`
+            template = `<li><a class="OpenChapter">${chapter}</a></li>`
             
             $('#nav').append(template)
             $('#nav-mobile').append(template)
           })
-          $('.CheckChapter').click((i) => {
-            CheckChapter(i.target.text)
+
+          if (chapter === null){
+            chapter=response.data.chapters[response.data.chapters.length-1]
+            OpenChapter(chapter)
+          }
+          
+          $('.OpenChapter').click((i) => {
+            OpenChapter(i.target.text)
+            i.target.innerText=`>> ${i.target.text}`
           })
      
 
         })
         .catch((err)=>{
-          swal(`${err}`)
+          Swal.fire(`${err}`)
         })
-
-
 
 
       function preloadImages(array) {
@@ -106,37 +119,35 @@
         }
       }
 
-      function CheckChapter(chapter) {
-
+      function OpenChapter(chapter) {
+        window.localStorage.setItem('chapter',chapter)
         
-
         $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
    
         var pages = []
-        axios.get('/AtackTitans/getLinks',{params:{manga:'AtackTitans',chapter:chapter}})
+        axios.get('/AtackTitans/getLinks',{params:{manga:manga,chapter:chapter}})
         .then((response)=>{
           response.data.pages.forEach((page)=>{
 
-          //format = 'jpg'
-          //link = `/static/img/${chapter}/${i < 10 ? '0' + String(i) : i}_fan-naruto.ru.${format}`
-          link = page
-          template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
-          pages.push(link)
-          $('#js-carousel-1').append(template)
+            link = page
+            template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
+            pages.push(link)
+            $('#js-carousel-1').append(template)
 
           })
+
+          if (page === null){
+            page=response.data.pages[0]
+          }
+
+          owl.trigger('to.owl.carousel',[page,0])
           initOwl()
+          preloadImages(response.data.pages)
 
         })
         .catch((err)=>{
           swal(`${err}`)
         })
-
-
-        
-
-
-        //preloadImages(pages)
       }
       
       function initOwl(){
@@ -148,35 +159,25 @@
           items: 1,
           mouseDrag: false,
           pullDrag: false,
-          touchDrag: false
+          touchDrag: false,
+          onChanged:callBack
         })
 
+        function callBack(event){
+          window.localStorage.setItem('page',event.page.index)
+        }
+
         $('#prev').click(() => {
-          owl.trigger('prev.owl.carousel');
+          owl.trigger('prev.owl.carousel')
+          
         })
 
         $('#next').click(() => {
           owl.trigger('next.owl.carousel')
         })
-
       }
-
-      
-
-
-
       $('.img').css({ 'width': `${window.innerWidth}px` })
-
-      
-
-
-
-
     })
-
-
   </script>
-
 </body>
-
 </html>
