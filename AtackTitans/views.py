@@ -7,7 +7,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from wagtail.project_template.project_name.settings.base import BASE_DIR, PROJECT_DIR
-import importlib.resources
+#import importlib.resources
 
 
 def getLinks(request):
