@@ -15,7 +15,7 @@ from wagtail.project_template.project_name.settings.base import BASE_DIR, PROJEC
 def getLinks(request):
     manga = request.GET['manga']
     chapter = request.GET['chapter']
-    path = "" + os.path.abspath(os.curdir) + "\\AtackTitans\\static\\img\\" + manga + "\\" + chapter + "\\*.*"
+    path = "" + os.path.abspath(os.curdir) + "\\static\\img\\" + manga + "\\" + chapter + "\\*.*"
     path = path.replace('\\', '/')
     pages = glob.glob(path)
     pages = ['/static' + i.split("static")[1] + '' for i in pages]
