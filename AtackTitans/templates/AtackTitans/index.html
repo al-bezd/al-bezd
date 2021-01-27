@@ -89,8 +89,12 @@
           
           $('.OpenChapter').click((i) => {
             OpenChapter(i.target.text)
-            [...document.querySelector('#nav-mobile').children].forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
-            [...document.querySelector('#nav').children].forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
+            nav_mob = new Array(...document.querySelector('#nav-mobile').children)
+            nav = new Array(...document.querySelector('#nav').children)
+          
+
+            nav_mob.forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
+            nav.forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
             i.target.innerText=`>> ${i.target.text}`
 
           })
