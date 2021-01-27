@@ -12,7 +12,7 @@ def getChapters(request):
     path = '' + PROJECT_DIR.replace('mysite','AtackTitans') + '\\static\\img\\' + manga + '\\*'
     path = path.replace('\\', '/')
     chapters = glob.glob(path)
-    chapters = [i.split('\\')[-1].replace('\\', '/') for i in chapters]
+    chapters = [i.replace('\\', '/').split('/')[-1] for i in chapters]
 
     return JsonResponse({'manga': manga, 'chapters': chapters,'curdir':PROJECT_DIR.replace('mysite','AtackTitans')})
 
