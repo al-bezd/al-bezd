@@ -15,8 +15,8 @@ from wagtail.project_template.project_name.settings.base import BASE_DIR, PROJEC
 def getLinks(request):
     manga = request.GET['manga']
     chapter = request.GET['chapter']
-    path = "" + os.path.abspath(os.curdir) + "\\AtackTitans\\static\\img\\" + manga + "\\" + chapter + "\\*.*".replace(
-        '\\', '/')
+    path = "" + os.path.abspath(os.curdir) + "\\AtackTitans\\static\\img\\" + manga + "\\" + chapter + "\\*.*"
+    path = path.replace('\\', '/')
     old_path = f'{os.path.abspath(os.curdir)}\\AtackTitans\\static\\img\\{manga}\\{chapter}\\*.*'
     pages = glob.glob(path)
     pages = ['/static' + i.split("static")[1] + '' for i in pages]
@@ -25,7 +25,8 @@ def getLinks(request):
 
 def getChapters(request):
     manga = request.GET['manga']
-    path = '' + os.path.abspath(os.curdir) + '\\AtackTitans\\static\\img\\'+manga+'\\*'.replace('\\', '/')
+    path = '' + os.path.abspath(os.curdir) + '\\AtackTitans\\static\\img\\'+manga+'\\*'
+    path = path.replace('\\', '/')
     chapters = glob.glob(path)
     chapters = [i.split('\\')[-1] for i in chapters]
     return JsonResponse({'manga': manga, 'chapters': chapters})
