@@ -89,7 +89,10 @@
           
           $('.OpenChapter').click((i) => {
             OpenChapter(i.target.text)
+            [...document.querySelector('#nav-mobile').children].forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
+            [...document.querySelector('#nav').children].forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
             i.target.innerText=`>> ${i.target.text}`
+
           })
      
 
