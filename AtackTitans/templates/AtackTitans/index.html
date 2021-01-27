@@ -23,7 +23,7 @@
 
 
   <nav class="light-blue lighten-1" role="navigation">
-    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Reader</a>
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><span id="title"></span></a>
       <ul id="nav" class="right hide-on-med-and-down">
         
       </ul>
@@ -59,75 +59,47 @@
   <script src="/static/js/init.js"></script>
   <script src="/static/js/owl.carousel.min.js"></script>
   <script>
+    var manga   = window.localStorage.getItem('manga')
+    var chapter = window.localStorage.getItem('chapter')
+    var page    = window.localStorage.getItem('page')
 
+    if (manga === null){
+      manga='AtackTitans'
+    }
 
-    $(document).ready(() => {
-
-      var manga   = window.localStorage.getItem('manga')
-      var chapter = window.localStorage.getItem('chapter')
-      var page    = window.localStorage.getItem('page')
-
-      if (manga === null){
-        manga='AtackTitans'
+    function DrawTitle(p){
+      if(p > -1){
+        window.localStorage.setItem('page',p)
+        document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
       }
+    }
 
-      axios.get('/AtackTitans/getChapters',{params:{manga:manga}})
-        .then((response)=>{
-          chapters = response.data.chapters
-          chapters = chapters.reverse()
-          response.data.chapters.forEach((chapter)=>{
-            template = `<li><a class="OpenChapter">${chapter}</a></li>`
-            
-            $('#nav').append(template)
-            $('#nav-mobile').append(template)
-          })
+    function OpenChapter(item, page=0){
+      chapter = item
+      window.localStorage.setItem('chapter',item)
+      
+      window.localStorage.setItem('page',page)
+      DrawTitle(page)
+      
+      nav_mob = new Array(...document.querySelector('#nav-mobile').children)
+      nav = new Array(...document.querySelector('#nav').children)
+      
+  
+      nav_mob.forEach(i=>{
+        i.name = i.querySelector('.OpenChapter').name
+        i.innerHTML=`<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
+      })
 
-          if (chapter === null){
-            chapter=response.data.chapters[response.data.chapters.length-1]
-            OpenChapter(chapter)
-          }
-          
-          $('.OpenChapter').click((i) => {
-            OpenChapter(i.target.text)
-            nav_mob = new Array(...document.querySelector('#nav-mobile').children)
-            nav = new Array(...document.querySelector('#nav').children)
-          
-
-            nav_mob.forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
-            nav.forEach(i=>{i.innerText=i.innerText.replace('>> ','')})
-            i.target.innerText=`>> ${i.target.text}`
-
-          })
-     
-
-        })
-        .catch((err)=>{
-          Swal.fire(`${err}`)
-        })
-
-
-      function preloadImages(array) {
-        if (!preloadImages.list) {
-          preloadImages.list = [];
+      nav_mob.forEach(i=>{
+        i.name = i.querySelector('.OpenChapter').name
+        if(i.name === item){
+          i.innerHTML=`<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">>>${i.name}</a>` 
         }
-        var list = preloadImages.list;
-        for (var i = 0; i < array.length; i++) {
-          var img = new Image();
-          img.onload = function () {
-            var index = list.indexOf(this);
-            if (index !== -1) {
-              // remove image from the array once it loaded
-              // for memory consumption reasons
-              list.splice(index, 1);
-            }
-          }
-          list.push(img);
-          img.src = array[i];
-        }
-      }
+      })
 
-      function OpenChapter(chapter) {
-        window.localStorage.setItem('chapter',chapter)
+
+
+      
         
         $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
    
@@ -143,12 +115,12 @@
 
           })
 
-          if (page === null){
-            page=response.data.pages[0]
-          }
+          //if (page === null){
+          //  page=response.data.pages[0]
+          //}
 
+          var owl = initOwl(owl)
           
-          initOwl()
           owl.trigger('to.owl.carousel',[page,0])
           preloadImages(response.data.pages)
 
@@ -156,34 +128,95 @@
         .catch((err)=>{
           Swal.fire(`${err}`)
         })
-      }
-      
-      function initOwl(){
 
-        var owl = $('.owl-carousel')
+    }
+
+    function initOwl(){ 
+      var owl = $('.owl-carousel')
+      owl.owlCarousel({
+        items: 1,
+        mouseDrag: false,
+        pullDrag: false,
+        touchDrag: false,
+        onChanged:callBack
+      })
+
+
+
+      function callBack(event){
+        DrawTitle(event.page.index)
+      }
+
+      $('#prev').click(() => {
+        owl.trigger('prev.owl.carousel')
         
+      })
 
-        owl.owlCarousel({
-          items: 1,
-          mouseDrag: false,
-          pullDrag: false,
-          touchDrag: false,
-          onChanged:callBack
-        })
+      $('#next').click(() => {
+        owl.trigger('next.owl.carousel')
+      })
+      return owl
+    }
 
-        function callBack(event){
-          window.localStorage.setItem('page',event.page.index)
-        }
-
-        $('#prev').click(() => {
-          owl.trigger('prev.owl.carousel')
-          
-        })
-
-        $('#next').click(() => {
-          owl.trigger('next.owl.carousel')
-        })
+    function preloadImages(array) {
+      if (!preloadImages.list) {
+        preloadImages.list = []
       }
+      var list = preloadImages.list
+      array.forEach(i=>{
+
+        var img = new Image()
+        img.onload = () =>{
+          var index = list.indexOf(this)
+          if (index !== -1) {
+            list.splice(index, 1)
+          }
+        }
+        list.push(img)
+        img.src = array[i]
+
+      })
+      
+    }
+
+    function GetChapters(){
+
+      axios.get('/AtackTitans/getChapters',{params:{manga:manga}})
+      .then((response)=>{
+        chapters = response.data.chapters
+        chapters = chapters.reverse()
+        response.data.chapters.forEach((chapter)=>{
+          template = `<li><a onclick="OpenChapter('${chapter}')" name="${chapter}" class="OpenChapter">${chapter}</a></li>`
+          
+          $('#nav').append(template)
+          $('#nav-mobile').append(template)
+        })
+
+        if (chapter === null){
+          chapter=response.data.chapters[response.data.chapters.length-1]
+        }
+        if (page===null){
+          page=0
+        }else{
+          page=page
+        }
+        OpenChapter(chapter,Number(page))
+
+      })
+      .catch((err)=>{
+        Swal.fire(`${err}`)
+      })
+
+    }
+
+   
+    
+
+    $(document).ready(() => {
+      
+      document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
+      
+      GetChapters()
       $('.img').css({ 'width': `${window.innerWidth}px` })
     })
   </script>
