@@ -147,8 +147,9 @@
             page=response.data.pages[0]
           }
 
-          owl.trigger('to.owl.carousel',[page,0])
+          
           initOwl()
+          owl.trigger('to.owl.carousel',[page,0])
           preloadImages(response.data.pages)
 
         })
