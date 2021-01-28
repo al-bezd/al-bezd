@@ -112,7 +112,7 @@
         page    = window.localStorage.getItem('page')
         chapter = window.localStorage.getItem('chapter')
         window.localStorage.setItem('page', p)
-        document.querySelector('#title').innerHTML = `${chapter} - ${Number(page)}`
+        document.querySelector('#title').innerHTML = `${chapter} - ${Number(page)+1}`
       }
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
     }
@@ -154,7 +154,8 @@
 
           var owl = initOwl(owl)
 
-          owl.trigger('to.owl.carousel', [0, 0])
+          owl.trigger('to.owl.carousel', [page, 0])
+          DrawTitle(page)
           preloadImages(pages)
 
         })
@@ -174,19 +175,16 @@
         onChanged: callBack
       })
 
-
-
-      function callBack(event) {
-        DrawTitle(event.page.index+1)
-      }
+      function callBack(event) {  }
 
       $('#prev').click(() => {
         owl.trigger('prev.owl.carousel')
-
+        DrawTitle(Number(page)-1)
       })
 
       $('#next').click(() => {
         owl.trigger('next.owl.carousel')
+        DrawTitle(Number(page)+1)
       })
       return owl
     }
@@ -261,9 +259,9 @@
         pages_list_tmp = ``
         pages.forEach((i)=>{
           if(pages.indexOf(i) == page){
-            pages_list_tmp = pages_list_tmp+`<option value="${page}" disabled selected>${page}</option>`
+            pages_list_tmp = pages_list_tmp+`<option value="${page}" disabled selected>${Number(page)+1}</option>`
           }else{
-            pages_list_tmp = pages_list_tmp+`<option value="${pages.indexOf(i)+1}" >${pages.indexOf(i)+1}</option>`
+            pages_list_tmp = pages_list_tmp+`<option value="${pages.indexOf(i)}" >${Number(pages.indexOf(i))+1}</option>`
           }
         })
         $('#pages_list').html(pages_list_tmp)
@@ -281,7 +279,7 @@
         if($('#chapters_list').val()!==null){
           chapter = $('#chapters_list').val()
         }
-        OpenChapter(chapter, Number($('#pages_list').val())-1)
+        OpenChapter(chapter, Number($('#pages_list').val()))
       }catch(err){
         Swal.fire(`${err}`)
         console.log(err)
