@@ -19,10 +19,10 @@
 
 </head>
 
-<body>
+<body class='grey darken-3'>
 
 
-  <nav class="light-blue lighten-1" role="navigation">
+  <nav class=" brown lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><span id="title"></span></a>
       <ul id="nav" class="right hide-on-med-and-down">
 
@@ -44,10 +44,10 @@
     </div>
 
     <div class="row center">
-      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large" id="prev">
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
           < </a>
       </div>
-      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large" id="next"> > </a></div>
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
     </div>
 
 
@@ -58,19 +58,11 @@
         <div class="row">
           <div class="input-field col s6 l6 m6">
             <select id="chapters_list">
-              <option value="" disabled selected>Выберите главу</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
             </select>
             <label>Выберите главу</label>
           </div>
           <div class="input-field col s6 l6 m6">
             <select id="pages_list">
-              <option value="" disabled selected>Выберите страницу</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
             </select>
             <label>Выберите страницу</label>
           </div>
@@ -120,7 +112,7 @@
         page    = window.localStorage.getItem('page')
         chapter = window.localStorage.getItem('chapter')
         window.localStorage.setItem('page', p)
-        document.querySelector('#title').innerHTML = `${chapter} - ${page}`
+        document.querySelector('#title').innerHTML = `${chapter} - ${Number(page)}`
       }
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
     }
@@ -148,10 +140,6 @@
         }
       })
 
-
-
-
-
       $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
 
       pages = []
@@ -159,18 +147,14 @@
         .then((response) => {
           pages = response.data.pages
           pages = pages.sort()
-          pages.forEach((page) => {
-
-            link = page
+          pages.forEach((link) => {
             template = `<div><img class="img" style="width:${window.innerWidth}px" src="${link}" alt="${link}"></div>`
-            //pages.push(link)
             $('#js-carousel-1').append(template)
-
           })
 
           var owl = initOwl(owl)
 
-          owl.trigger('to.owl.carousel', [page, 0])
+          owl.trigger('to.owl.carousel', [0, 0])
           preloadImages(pages)
 
         })
@@ -193,7 +177,7 @@
 
 
       function callBack(event) {
-        DrawTitle(event.page.index)
+        DrawTitle(event.page.index+1)
       }
 
       $('#prev').click(() => {
@@ -279,7 +263,7 @@
           if(pages.indexOf(i) == page){
             pages_list_tmp = pages_list_tmp+`<option value="${page}" disabled selected>${page}</option>`
           }else{
-            pages_list_tmp = pages_list_tmp+`<option value="${pages.indexOf(i)}" >${pages.indexOf(i)}</option>`
+            pages_list_tmp = pages_list_tmp+`<option value="${pages.indexOf(i)+1}" >${pages.indexOf(i)+1}</option>`
           }
         })
         $('#pages_list').html(pages_list_tmp)
@@ -294,7 +278,10 @@
 
     $('#select_page').click(event=>{
       try{
-        OpenChapter($('#chapters_list').val(),Number($('#pages_list').val()))
+        if($('#chapters_list').val()!==null){
+          chapter = $('#chapters_list').val()
+        }
+        OpenChapter(chapter, Number($('#pages_list').val())-1)
       }catch(err){
         Swal.fire(`${err}`)
         console.log(err)
