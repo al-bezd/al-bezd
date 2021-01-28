@@ -281,7 +281,8 @@
         $('#pages_list').html(pages_list_tmp)
 
         $(document).ready(()=>{
-          $('select').formSelect()
+          $('#chapters_list').formSelect()
+          $('#pages_list').formSelect()
         })
 
 
@@ -289,7 +290,7 @@
 
     $('#select_page').click(event=>{
       try{
-        OpenChapter($('#chapters_list').val(),$('#pages_list').val())
+        OpenChapter($('#chapters_list').val(),Number($('#pages_list').val()))
       }catch(err){
         Swal.fire(`${err}`)
         console.log(err)
