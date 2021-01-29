@@ -35,12 +35,9 @@
             <div class="background">
               <img src="images/office.jpg">
             </div>
-            <a href="#user"><img class="circle" src="images/yuna.jpg"></a>
-            <a href="#name"><span class="white-text name">John Doe</span></a>
-            <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
           </div>
         </li>
-        <li><a href="#!"><i class="material-icons">cloud</i>Comics reader</a></li>
+        <li><a href="#!"><i class="material-icons">cloud</i>AnyReader</a></li>
         <li>
           <div class="divider"></div>
         </li>
@@ -54,7 +51,33 @@
 
 
         </li>
-        <li><a class="waves-effect" onclick="Swal.fire('Функция в разработке')" href="#!">Добавить комиксы</a></li>
+        <li>
+          <a class="waves-effect"><i class="material-icons">turned_in</i>Избранное</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">rotate_right</i>Случайная манга</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">search</i>Поиск</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">turned_in_not</i>Не прочитано</a>
+        </li>
+
+        <li>
+          <a class="waves-effect" ><i class="material-icons">share</i>Поделиться</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">star</i>Оценить приложение</a>
+        </li>
+        <li>
+          <a class="waves-effect" href="showADW" ><i class="material-icons">ondemand_video</i>Поддержать проект</a>
+        </li>
+        <li>
+          <a class="waves-effect" href="mailto:"><i class="material-icons">feedback</i>Написать нам</a>
+        </li>
+
+        <li><a class="waves-effect" onclick="Swal.fire('Функция в разработке')" href="#!"><i class="material-icons" >control_point</i>Добавить комиксы</a></li>
 
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -121,7 +144,12 @@
   <script src="/static/js/owl.carousel.min.js"></script>
   <script>
     M.AutoInit()
-    Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
+    if (window.localStorage.getItem('AnyReaderDisclamer')===null){
+      Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
+    }else{
+      window.localStorage.setItem('AnyReaderDisclamer',true)
+    }
+    
 
     let owl = $('.owl-carousel')
     let current_page = 0
@@ -143,19 +171,16 @@
         document.querySelector('#title').innerHTML = `${chapter} - ${Number(page) + 1}`
       }
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
+      
     }
 
     function OpenChapter(item, page = 0) {
       chapter = item
       window.localStorage.setItem('chapter', item)
-
       window.localStorage.setItem('page', page)
       DrawTitle(page)
 
       nav_mob = new Array(...document.querySelector('#nav-mobile').querySelector('#AtackTitans_chapters').children)
-      //nav = new Array(...document.querySelector('#nav').children)
-
-
       nav_mob.forEach(i => {
         
         i.name = i.querySelector('.OpenChapter').name
@@ -165,7 +190,7 @@
       nav_mob.forEach(i => {
         i.name = i.querySelector('.OpenChapter').name
         if (i.name === item) {
-          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">>>${i.name}</a>`
+          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter grey">${i.name}</a>`
         }
       })
 
@@ -216,11 +241,44 @@
       $('#prev').click(() => {
         owl.trigger('prev.owl.carousel')
         DrawTitle(current_page - 1)
+
+        if(current_page===0 && $('#prev').text()==='Пред. глава'){
+          if(chapters[chapters.indexOf(chapter)-1]===undefined){
+            Swal.fire('Глава не найдена')
+          }else{
+            chapter = chapters[chapters.indexOf(chapter)-1]
+            OpenChapter(chapter)
+          }
+          
+        }
+
+        if(current_page===0){
+          $('#prev').text('Пред. глава') 
+        }else{
+          $('#prev').text('<') 
+        }
+
       })
 
       $('#next').click(() => {
         owl.trigger('next.owl.carousel')
         DrawTitle(current_page - 1)
+
+        if(current_page===pages.length-1 && $('#next').text()==='След. глава'){
+          if(chapters[chapters.indexOf(chapter)+1]===undefined){
+            Swal.fire('Глава не найдена')
+          }else{
+            chapter = chapters[chapters.indexOf(chapter)+1]
+            OpenChapter(chapter)
+          }
+        }
+
+        if(current_page === pages.length-1){
+          $('#next').text('След. глава') 
+        }else{
+          $('#next').text('>') 
+        }
+
       })
       return owl
     }
