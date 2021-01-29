@@ -181,17 +181,21 @@
       DrawTitle(page)
 
       nav_mob = new Array(...document.querySelector('#nav-mobile').querySelector('#AtackTitans_chapters').children)
-      nav_mob.forEach(i => {
-        
-        i.name = i.querySelector('.OpenChapter').name
-        i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
-      })
+      //nav_mob.forEach(i => {
+      //  i.name = i.querySelector('.OpenChapter').name
+      //  i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
+      //})
 
       nav_mob.forEach(i => {
         i.name = i.querySelector('.OpenChapter').name
+
         if (i.name === item) {
-          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter grey">${i.name}</a>`
+          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
+          i.classList.add('purple lighten-5')
+        }else{
+          i.classList.remove('purple lighten-5')
         }
+
       })
 
       $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
