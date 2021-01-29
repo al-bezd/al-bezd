@@ -191,9 +191,11 @@
 
         if (i.name === item) {
           i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
-          i.classList.add('purple lighten-5')
+          i.classList.add('purple')
+          i.classList.add('lighten-5')
         }else{
-          i.classList.remove('purple lighten-5')
+          i.classList.remove('purple')
+          i.classList.remove('lighten-5')
         }
 
       })
