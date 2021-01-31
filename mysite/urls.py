@@ -21,7 +21,7 @@ urlpatterns = [
 
     path('msg/', include('message_sender.urls'), name='msg'),
     path('AtackTitans/', include('AtackTitans.urls'), name='AtackTitans'),
-
+    path('AniReader/', include('AtackTitans.urls'), name='AniReader'),
 ]
 
 

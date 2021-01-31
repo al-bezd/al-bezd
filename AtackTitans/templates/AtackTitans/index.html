@@ -16,7 +16,13 @@
   <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
   <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
   <script data-ad-client="ca-pub-9869058068347155" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
+  <style>
+    .arrows{
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body class='grey darken-3'>
@@ -52,89 +58,117 @@
 
         </li>
         <li>
-          <a class="waves-effect"><i class="material-icons">turned_in</i>Избранное</a>
+          <a class=" catalog" ><i class="material-icons">turned_in</i>Каталог</a>
         </li>
         <li>
-          <a class="waves-effect" ><i class="material-icons">rotate_right</i>Случайная манга</a>
+          <a class=" inwork"><i class="material-icons">turned_in</i>Избранное</a>
         </li>
         <li>
-          <a class="waves-effect" ><i class="material-icons">search</i>Поиск</a>
+          <a class=" inwork" ><i class="material-icons">rotate_right</i>Случайная манга</a>
         </li>
         <li>
-          <a class="waves-effect" ><i class="material-icons">turned_in_not</i>Не прочитано</a>
+          <a class=" inwork" ><i class="material-icons">search</i>Поиск</a>
+        </li>
+        <li>
+          <a class=" inwork" ><i class="material-icons">turned_in_not</i>Не прочитано</a>
         </li>
 
         <li>
-          <a class="waves-effect" ><i class="material-icons">share</i>Поделиться</a>
+          <a class=" inwork" ><i class="material-icons">share</i>Поделиться</a>
         </li>
         <li>
-          <a class="waves-effect" ><i class="material-icons">star</i>Оценить приложение</a>
+          <a class=" inwork" ><i class="material-icons">star</i>Оценить приложение</a>
         </li>
         <li>
-          <a class="waves-effect" href="showADW" ><i class="material-icons">ondemand_video</i>Поддержать проект</a>
+          <a class=" inwork" href="showADW" ><i class="material-icons">ondemand_video</i>Поддержать проект</a>
         </li>
         <li>
-          <a class="waves-effect" href="mailto:"><i class="material-icons">feedback</i>Написать нам</a>
+          <a class="" href="mailto:"><i class="material-icons">feedback</i>Написать нам</a>
         </li>
 
-        <li><a class="waves-effect" onclick="Swal.fire('Функция в разработке')" href="#!"><i class="material-icons" >control_point</i>Добавить комиксы</a></li>
+        <li><a class="  inwork" href="#!"><i class="material-icons" >control_point</i>Добавить комиксы</a></li>
 
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
   </nav>
 
+  <div id="catalog" v-show="seen">
+    <div class="row">
+      <div class="col s6 l4 m3" v-for="manga in mangas" :key="manga.title">
 
-
-  <div class="">
-    <div class="row" id="base">
-      <div id="js-carousel-1" class="owl-carousel"></div>
-
-    </div>
-
-    <div class="row center">
-      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
-          < </a>
-      </div>
-      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
-    </div>
-
-
-    <div id="modal1" class="modal">
-      <div class="modal-content">
-        <h6 id="curr_manga">Текущая манга : </h6>
-        <h6 id="curr_chapter">Текущая глава : </h6>
-        <div class="row">
-          <div class="input-field col s6 l6 m6" hidden>
-            <select id="chapters_list">
-            </select>
-            <label>Выберите главу</label>
+        <div class="card z-depth-2" >
+          <div class="card-image">
+            <img :src="manga.title_image">
           </div>
-          <div class="input-field col s12 l12 m12">
-            <select id="pages_list">
-            </select>
-            <label>Выберите страницу</label>
+          <div class="card-content" >
+            <p>{{manga.title}}</p>
+          </div>
+          <div class="card-action center">
+            <span onclick="vue_catalog.readManga(this)" :id-manga="manga.title" >Читать</span>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="select_page">Выбрать</a>
+
       </div>
     </div>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('#modal1')
-        var instances = M.Modal.init(elems)
-        //instances[0].open()
-      })
 
-    </script>
+  </div>
+
+  <div id="chapter" v-show="seen">
+
+    <div class="row">
+      <div class="col s12 m12 l12">
+        <ul class="collection">
+          <li class="collection-item huita" v-for="chap in chapters"  :text="chap" onclick="vue_page.openChapter(this)">{{chap}}</li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div id="page"    v-show="seen">
+      <div class="row" id="base">
+        <div id="js-carousel-1"></div>
+      </div>
+
+      <div class="row center arrows">
+        <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
+            < </a>
+        </div>
+        <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
+      </div>
+
+
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h6 id="curr_manga">Текущая манга : </h6>
+          <h6 id="curr_chapter">Текущая глава : </h6>
+          <div class="row">
+            <div class="input-field col s6 l6 m6" hidden>
+              <select id="chapters_list">
+              </select>
+              <label>Выберите главу</label>
+            </div>
+            <div class="input-field col s12 l12 m12">
+              <select id="pages_list">
+              </select>
+              <label>Выберите страницу</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-close  waves-green btn-flat" id="select_page">Выбрать</a>
+        </div>
+      </div>
+
 
 
   </div>
 
 
   <!--  Scripts-->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
     integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
     crossorigin="anonymous"></script>
@@ -143,43 +177,93 @@
   <script src="/static/js/init.js"></script>
   <script src="/static/js/owl.carousel.min.js"></script>
   <script>
+
+
+    document.addEventListener('DOMContentLoaded',  ()=> {
+      var elems = document.querySelectorAll('#modal1')
+      var instances = M.Modal.init(elems)
+    })
+    $('.inwork').click(event=>{
+      Swal.fire('Функция в разработке')
+    })
+ 
+    jQuery.prototype.Show=function(){
+      this.isShow=true
+      jpage.forEach(i=>{
+        if(i!==this){
+          i.Hide()
+        }
+      })
+      this.show()
+    }
+
+    jQuery.prototype.Hide=function(){
+      this.isShow=false
+      this.hide()
+    }
+
+    function current_index(){
+      return current_page-1
+    }
+
     M.AutoInit()
     if (window.localStorage.getItem('AnyReaderDisclamer')===null){
       Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
-    }else{
       window.localStorage.setItem('AnyReaderDisclamer',true)
     }
     
 
-    let owl = $('.owl-carousel')
+    let jpage = []
     let current_page = 0
     var manga = window.localStorage.getItem('manga')
     var chapter = window.localStorage.getItem('chapter')
     var page = window.localStorage.getItem('page')
+    if (page!==null && page!=="NaN"){
+      current_page = Number(page)
+    }
+    
     let pages = []
     if (manga === null) {
       manga = 'AtackTitans'
       $('#curr_manga').text('Текущая манга : "Атака титанов"')
     }
 
-    function DrawTitle(p) {
-      if (p > -1) {
-        //page    = window.localStorage.getItem('page')
-        page = p
-        chapter = window.localStorage.getItem('chapter')
-        window.localStorage.setItem('page', p)
-        document.querySelector('#title').innerHTML = `${chapter} - ${Number(page) + 1}`
+    function DrawArrow(){
+      if(current_page===1){
+        $('#prev').text('Пред. глава') 
+      }else{
+        $('#prev').text('<') 
       }
+
+      if(current_index() === pages.length-1 && pages.length>0){
+        $('#next').text('След. глава') 
+      }else{
+        $('#next').text('>') 
+      }
+      DrawTitle()
+
+    }
+
+    function DrawTitle() {
+      //if (p > -1) {
+
+        chapter = window.localStorage.getItem('chapter')
+        window.localStorage.setItem('page', current_page)
+        document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
+      //}
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
+      //DrawArrow()
       
     }
 
-    function OpenChapter(item, page = 0) {
+    function OpenChapter(item, page = 1) {
+      current_page = page
       chapter = item
       window.localStorage.setItem('chapter', item)
       window.localStorage.setItem('page', page)
-      DrawTitle(page)
-
+      jpage = []
+      
+    
       nav_mob = new Array(...document.querySelector('#nav-mobile').querySelector('#AtackTitans_chapters').children)
 
 
@@ -197,94 +281,98 @@
 
       })
 
-      $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
+      $('#base').html('<div id="js-carousel-1"></div>')
 
       pages = []
-      axios.get('/AtackTitans/getLinks', { params: { manga: manga, chapter: chapter } })
+      axios.get('/AniReader/getLinks', { params: { manga: manga, chapter: chapter } })
         .then((response) => {
           pages = response.data.pages
           pages = pages.sort()
+          
+
           pages.forEach((link) => {
-            template = `<div><img class="img" src="${link}" alt="${link}"></div>`
-            $('#js-carousel-1').append(template)
+            tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
+            tmp.hide()
+            jpage.push(tmp)
+            $('#js-carousel-1').append(tmp)
           })
-
-          var owl = initOwl(owl)
-
-          owl.trigger('to.owl.carousel', [page, 0])
-          DrawTitle(page)
+          DrawArrow()
           preloadImages(pages)
-
+          jpage[current_index()].Show()
         })
         .catch((err) => {
+          console.log(err)
           Swal.fire(`${err}`)
         })
-
+        
+        //DrawTitle()
     }
-
-    $('.img').css({ width: `${window.innerWidth}px` })
-
-    function initOwl() {
-      let owl = $('.owl-carousel')
-      owl.owlCarousel({
-        items: 1,
-        mouseDrag: false,
-        pullDrag: false,
-        touchDrag: false,
-
-      })
-
-      owl.on('changed.owl.carousel', function (e) {
-        //$('.counter').text(++e.page.index + ' из ' + e.item.count)
-        current_page = ++e.page.index
-      })
-
 
 
       $('#prev').click(() => {
-        owl.trigger('prev.owl.carousel')
-        DrawTitle(current_page - 1)
+        jpage.forEach(i=>{
+          if(i.isShow){
+            current_page=current_page-1
+          }
+        })
 
-        if(current_page===0 && $('#prev').text()==='Пред. глава'){
+        if (current_page < 1){
+          current_page=1
+          jpage[0].Show() 
+        }else{
+          jpage[current_index()].Show()
+        }
+
+        
+   
+        DrawTitle(current_page)
+
+        
+        if($('#prev').text()==='Пред. глава'){
+          if(chapters[chapters.indexOf(chapter)+1]===undefined){
+            Swal.fire('Глава не найдена')
+          }else{
+            chapter = chapters[chapters.indexOf(chapter)+1]
+            $('#prev').text('<') 
+            OpenChapter(chapter)
+          }
+        }
+        DrawArrow()
+ 
+
+      })
+
+      $('#next').click(() => {
+        jpage.forEach(i=>{
+          if(i.isShow){
+            current_page=current_page+1
+          }
+        })
+
+        if (current_page > jpage.length){
+          current_page=jpage.length
+          jpage[jpage.length-1].Show() 
+        }else{
+          jpage[current_index()].Show()
+        }
+
+        DrawTitle()
+
+        if($('#next').text()==='След. глава'){
           if(chapters[chapters.indexOf(chapter)-1]===undefined){
             Swal.fire('Глава не найдена')
           }else{
             chapter = chapters[chapters.indexOf(chapter)-1]
             OpenChapter(chapter)
           }
-          
         }
+        DrawArrow()
 
-        if(current_page===0){
-          $('#prev').text('Пред. глава') 
-        }else{
-          $('#prev').text('<') 
-        }
+        
 
       })
-
-      $('#next').click(() => {
-        owl.trigger('next.owl.carousel')
-        DrawTitle(current_page - 1)
-
-        if(current_page===pages.length-1 && $('#next').text()==='След. глава'){
-          if(chapters[chapters.indexOf(chapter)+1]===undefined){
-            Swal.fire('Глава не найдена')
-          }else{
-            chapter = chapters[chapters.indexOf(chapter)+1]
-            OpenChapter(chapter)
-          }
-        }
-
-        if(current_page === pages.length-1){
-          $('#next').text('След. глава') 
-        }else{
-          $('#next').text('>') 
-        }
-
-      })
-      return owl
-    }
+      
+    
 
     function preloadImages(array) {
       if (!preloadImages.list) {
@@ -356,10 +444,10 @@
 
       pages_list_tmp = ``
       pages.forEach((i) => {
-        if (pages.indexOf(i) == page) {
-          pages_list_tmp = pages_list_tmp + `<option value="${page}" disabled selected>${Number(page) + 1}</option>`
+        if (pages.indexOf(i) == current_index()) {
+          pages_list_tmp = pages_list_tmp + `<option value="${current_page}" disabled selected>${current_page}</option>`
         } else {
-          pages_list_tmp = pages_list_tmp + `<option value="${pages.indexOf(i)}" >${Number(pages.indexOf(i)) + 1}</option>`
+          pages_list_tmp = pages_list_tmp + `<option value="${Number(pages.indexOf(i)) + 1}" >${Number(pages.indexOf(i)) + 1}</option>`
         }
       })
       $('#pages_list').html(pages_list_tmp)
@@ -388,10 +476,163 @@
 
     $(document).ready(() => {
 
-      document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
-      GetChapters()
-      $('.img').css({ 'width': `${window.innerWidth}px` })
+      //document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
+      //GetChapters()
+      //$('.img').css({ 'width': `${window.innerWidth}px` })
+
+      
+      DrawArrow()
     })
+  </script>
+
+
+  <script>
+
+    var vue_catalog = new Vue({
+      el: '#catalog',
+      data: {
+        seen:true,
+        mangas:[]
+      },
+      methods:{
+        show() {
+          $('#title').hide()
+          screens.forEach(element => {
+            if (this === element) {
+              this.seen = true
+            } else {
+              element.seen = false
+            }
+          })
+        },
+        getMangas(){
+          self=this
+          axios.get('/AniReader/getMangas')
+          .then(response=>{
+            self.mangas = response.data.mangas
+          })
+          .catch(err=>{
+            Swal.fire(`${err}`)
+          })
+        },
+        readManga(el){
+          //console.log(el.getAttribute('id-manga'))
+          vue_chapter.openManga(el.getAttribute('id-manga'))
+
+
+        }
+      }
+    })
+
+    var vue_chapter = new Vue({
+      el: '#chapter',
+      data: {
+        message: 'Привет, Vue!',
+        seen:true,
+        current_manga:'',
+        current_chapter:'',
+        chapters:[]
+      },
+      methods:{
+        show() {
+          $('#title').show()
+          screens.forEach(element => {
+            if (this === element) {
+              this.seen = true
+            } else {
+              element.seen = false
+            }
+          })
+          l = [...$('.huita')]
+          l.forEach(i=>{
+            i.innerText = i.getAttribute('text')
+          })
+
+
+
+        },
+        openManga(manga){
+          this.current_manga = manga
+          this.getChapters(manga)
+          this.show()
+          
+
+        },
+        getChapters(manga){
+
+          axios.get('/AniReader/getChapters',{params:{manga:manga}})
+          .then(response=>{
+
+            this.chapters = response.data.chapters.sort().reverse()
+            l = [...$('.huita')]
+            l.forEach(i=>{
+              i.innerText = i.getAttribute('text')
+            })
+
+
+
+            
+          })
+          .catch(err=>{
+            Swal.fire(`${err}`)
+          })
+        }
+      }
+    })
+
+
+    var vue_page = new Vue({
+      el: '#page',
+      data: {
+        message: 'Привет, Vue!',
+        seen:true,
+        current_page : 1,
+        current_index:this.current_page-1,
+        chapter:''
+      },
+      methods:{
+        openChapter(chapter){
+          this.chapter = chapter
+          if (chapter === null) {
+            chapter = chapters[chapters.length - 1]
+          }
+          if (page === null) {
+            page = 0
+          } else {
+            page = page
+          }
+          OpenChapter(chapter, Number(page))
+
+
+        },
+        next(){
+
+        },
+        prev(){
+
+        }
+      }
+    })
+
+    let screens = [
+      //main,
+      vue_catalog,
+      vue_chapter,
+      vue_page,
+      //settings
+    ]
+    vue_catalog.getMangas()
+    vue_catalog.show()
+    $(document).ready(() => {
+
+      $('.catalog').click(event=>{
+        vue_catalog.show()
+      })
+
+    })
+
+
+
   </script>
 </body>
 

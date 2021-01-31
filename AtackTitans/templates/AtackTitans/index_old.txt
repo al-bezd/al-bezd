@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reader</title>
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="/static/css/materialize.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Compiled and minified JavaScript -->
+  <script src="/static/js/jquery351.js"></script>
+  <script src="/static/js/materialize.min.js"></script>
+  <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
+  <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
+  <script data-ad-client="ca-pub-9869058068347155" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</head>
+
+<body class='grey darken-3'>
+
+
+  <nav class=" brown lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo"><span id="title"></span></a>
+      <ul id="nav" class="right hide-on-med-and-down">
+
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav collapsible">
+
+        <li hidden>
+          <div class="user-view">
+            <div class="background">
+              <img src="images/office.jpg">
+            </div>
+          </div>
+        </li>
+        <li><a href="#!"><i class="material-icons">cloud</i>AnyReader</a></li>
+        <li>
+          <div class="divider"></div>
+        </li>
+        <li>
+
+          <div class="collapsible-header grey darken-3"><i class="material-icons">whatshot</i>Атака титанов</div>
+          <div class="collapsible-body">
+            <ul class="collection" id="AtackTitans_chapters">
+            </ul>
+          </div>
+
+
+        </li>
+        <li>
+          <a class="waves-effect"><i class="material-icons">turned_in</i>Избранное</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">rotate_right</i>Случайная манга</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">search</i>Поиск</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">turned_in_not</i>Не прочитано</a>
+        </li>
+
+        <li>
+          <a class="waves-effect" ><i class="material-icons">share</i>Поделиться</a>
+        </li>
+        <li>
+          <a class="waves-effect" ><i class="material-icons">star</i>Оценить приложение</a>
+        </li>
+        <li>
+          <a class="waves-effect" href="showADW" ><i class="material-icons">ondemand_video</i>Поддержать проект</a>
+        </li>
+        <li>
+          <a class="waves-effect" href="mailto:"><i class="material-icons">feedback</i>Написать нам</a>
+        </li>
+
+        <li><a class="waves-effect" onclick="Swal.fire('Функция в разработке')" href="#!"><i class="material-icons" >control_point</i>Добавить комиксы</a></li>
+
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+
+
+  <div class="">
+    <div class="row" id="base">
+      <div id="js-carousel-1" class="owl-carousel"></div>
+
+    </div>
+
+    <div class="row center">
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
+          < </a>
+      </div>
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
+    </div>
+
+
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h6 id="curr_manga">Текущая манга : </h6>
+        <h6 id="curr_chapter">Текущая глава : </h6>
+        <div class="row">
+          <div class="input-field col s6 l6 m6" hidden>
+            <select id="chapters_list">
+            </select>
+            <label>Выберите главу</label>
+          </div>
+          <div class="input-field col s12 l12 m12">
+            <select id="pages_list">
+            </select>
+            <label>Выберите страницу</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat" id="select_page">Выбрать</a>
+      </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('#modal1')
+        var instances = M.Modal.init(elems)
+        //instances[0].open()
+      })
+
+    </script>
+
+
+  </div>
+
+
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+    integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="/static/js/materialize.js"></script>
+  <script src="/static/js/init.js"></script>
+  <script src="/static/js/owl.carousel.min.js"></script>
+  <script>
+    M.AutoInit()
+    if (window.localStorage.getItem('AnyReaderDisclamer')===null){
+      Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
+      window.localStorage.setItem('AnyReaderDisclamer',true)
+    }
+    
+
+    let owl = $('.owl-carousel')
+    let current_page = 0
+    var manga = window.localStorage.getItem('manga')
+    var chapter = window.localStorage.getItem('chapter')
+    var page = window.localStorage.getItem('page')
+    let pages = []
+    if (manga === null) {
+      manga = 'AtackTitans'
+      $('#curr_manga').text('Текущая манга : "Атака титанов"')
+    }
+
+    function DrawArrow(){
+      if(current_page===1 || current_page===0){
+        $('#prev').text('Пред. глава') 
+      }else{
+        $('#prev').text('<') 
+      }
+
+      if(current_page === pages.length && pages.length>0){
+        $('#next').text('След. глава') 
+      }else{
+        $('#next').text('>') 
+      }
+
+    }
+
+    function DrawTitle(p) {
+      if (p > -1) {
+        //page    = window.localStorage.getItem('page')
+        page = p
+        chapter = window.localStorage.getItem('chapter')
+        window.localStorage.setItem('page', p)
+        document.querySelector('#title').innerHTML = `${chapter} - ${Number(page) + 1}`
+      }
+      $('#curr_chapter').text(`Текущая глава : ${chapter}`)
+      
+    }
+
+    function OpenChapter(item, page = 0) {
+      chapter = item
+      window.localStorage.setItem('chapter', item)
+      window.localStorage.setItem('page', page)
+      DrawTitle(page)
+      
+
+
+      
+
+      nav_mob = new Array(...document.querySelector('#nav-mobile').querySelector('#AtackTitans_chapters').children)
+
+
+      nav_mob.forEach(i => {
+        i.name = i.querySelector('.OpenChapter').name
+
+        if (i.name === item) {
+          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
+          i.classList.add('purple')
+          i.classList.add('lighten-5')
+        }else{
+          i.classList.remove('purple')
+          i.classList.remove('lighten-5')
+        }
+
+      })
+
+      $('#base').html('<div id="js-carousel-1" class="owl-carousel"></div>')
+
+      pages = []
+      axios.get('/AtackTitans/getLinks', { params: { manga: manga, chapter: chapter } })
+        .then((response) => {
+          pages = response.data.pages
+          pages = pages.sort()
+          pages.forEach((link) => {
+            template = `<div><img class="img" src="${link}" alt="${link}"></div>`
+            $('#js-carousel-1').append(template)
+          })
+
+          var owl = initOwl(owl)
+
+          owl.trigger('to.owl.carousel', [page, 0])
+          DrawTitle(page)
+          preloadImages(pages)
+          DrawArrow()
+        })
+        .catch((err) => {
+          Swal.fire(`${err}`)
+        })
+        
+
+    }
+
+    $('.img').css({ width: `${window.innerWidth}px` })
+
+    function initOwl() {
+      let owl = $('.owl-carousel')
+      owl.owlCarousel({
+        items: 1,
+        mouseDrag: false,
+        pullDrag: false,
+        touchDrag: false,
+
+      })
+
+      owl.on('changed.owl.carousel', function (e) {
+        //$('.counter').text(++e.page.index + ' из ' + e.item.count)
+        current_page = ++e.page.index
+
+        //DrawArrow()
+      })
+
+
+
+      $('#prev').click(() => {
+        owl.trigger('prev.owl.carousel')
+        DrawTitle(current_page - 1)
+
+        
+        if($('#prev').text()==='Пред. глава'){
+          if(chapters[chapters.indexOf(chapter)+1]===undefined){
+            Swal.fire('Глава не найдена')
+          }else{
+            chapter = chapters[chapters.indexOf(chapter)+1]
+            $('#prev').text('<') 
+            OpenChapter(chapter)
+          }
+        }
+        DrawArrow()
+ 
+
+      })
+
+      $('#next').click(() => {
+        owl.trigger('next.owl.carousel')
+        DrawTitle(current_page - 1)
+
+        if($('#next').text()==='След. глава'){
+          if(chapters[chapters.indexOf(chapter)-1]===undefined){
+            Swal.fire('Глава не найдена')
+          }else{
+            chapter = chapters[chapters.indexOf(chapter)-1]
+            $('#next').text('>')
+            OpenChapter(chapter)
+          }
+        }
+        DrawArrow()
+
+        
+
+      })
+      return owl
+    }
+
+    function preloadImages(array) {
+      if (!preloadImages.list) {
+        preloadImages.list = []
+      }
+      var list = preloadImages.list
+      array.forEach(i => {
+
+        var img = new Image()
+        img.onload = () => {
+          var index = list.indexOf(this)
+          if (index !== -1) {
+            list.splice(index, 1)
+          }
+        }
+        list.push(img)
+        img.src = array[i]
+
+      })
+
+    }
+
+    function GetChapters() {
+
+      axios.get('/AtackTitans/getChapters', { params: { manga: manga } })
+        .then((response) => {
+          chapters = response.data.chapters
+          chapters = chapters.sort()
+          chapters = chapters.reverse()
+          chapters.forEach((chapter) => {
+            template = `<li class="collection-item"><a onclick="OpenChapter('${chapter}')" name="${chapter}" class="OpenChapter">${chapter}</a></li>`
+            
+
+            //$('#nav').append(template)
+            $('#AtackTitans_chapters').append(template)
+          })
+
+          if (chapter === null) {
+            chapter = chapters[chapters.length - 1]
+          }
+          if (page === null) {
+            page = 0
+          } else {
+            page = page
+          }
+          OpenChapter(chapter, Number(page))
+
+        })
+        .catch((err) => {
+          Swal.fire(`${err}`)
+        })
+
+    }
+
+    $('#title').click(event => {
+      var elems = document.querySelectorAll('#modal1')
+      var instances = M.Modal.init(elems)
+      instances[0].open()
+
+      chapters_list_tmp = ``
+      chapters.forEach((i) => {
+        if (i == chapter) {
+          chapters_list_tmp = chapters_list_tmp + `<option value="${chapter}" disabled selected>${chapter}</option>`
+        } else {
+          chapters_list_tmp = chapters_list_tmp + `<option value="${i}" >${i}</option>`
+        }
+      })
+      $('#chapters_list').html(chapters_list_tmp)
+
+      pages_list_tmp = ``
+      pages.forEach((i) => {
+        if (pages.indexOf(i) == page) {
+          pages_list_tmp = pages_list_tmp + `<option value="${page}" disabled selected>${Number(page) + 1}</option>`
+        } else {
+          pages_list_tmp = pages_list_tmp + `<option value="${pages.indexOf(i)}" >${Number(pages.indexOf(i)) + 1}</option>`
+        }
+      })
+      $('#pages_list').html(pages_list_tmp)
+
+      $(document).ready(() => {
+        $('#chapters_list').formSelect()
+        $('#pages_list').formSelect()
+      })
+
+
+    })
+
+    $('#select_page').click(event => {
+      try {
+        if ($('#chapters_list').val() !== null) {
+          chapter = $('#chapters_list').val()
+        }
+        OpenChapter(chapter, Number($('#pages_list').val()))
+      } catch (err) {
+        Swal.fire(`${err}`)
+        console.log(err)
+      }
+    })
+
+
+
+    $(document).ready(() => {
+
+      document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
+      GetChapters()
+      $('.img').css({ 'width': `${window.innerWidth}px` })
+
+      
+      DrawArrow()
+    })
+  </script>
+</body>
+
+</html>
