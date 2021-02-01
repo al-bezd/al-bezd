@@ -45,7 +45,7 @@
             </div>
           </div>
         </li>
-        <li><a href="#!"><i class="material-icons">cloud</i>AnyReader</a></li>
+        <li><a href="#!"><i class="material-icons">cloud</i>AniReader</a></li>
         <li>
           <div class="divider"></div>
         </li>
@@ -89,19 +89,6 @@
   <div id="catalog" v-show="seen">
     <div class="row" id="catalog-body">
 
-      <div class="preloader-wrapper big active">
-        <div class="spinner-layer spinner-blue-only">
-          <div class="circle-clipper left">
-            <div class="circle"></div>
-          </div>
-          <div class="gap-patch">
-            <div class="circle"></div>
-          </div>
-          <div class="circle-clipper right">
-            <div class="circle"></div>
-          </div>
-        </div>
-      </div>
 
     </div>
 
@@ -112,6 +99,8 @@
     <div class="row">
       <div class="col s12 m12 l12">
         <ul class="collection" id="chapter-body">
+
+
 
         </ul>
       </div>
@@ -157,6 +146,22 @@
 
 
 
+  </div>
+
+
+
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
   </div>
 
 
@@ -208,9 +213,9 @@
 
 
 
-  
 
-  
+
+
 
     function preloadImages(array) {
       if (!preloadImages.list) {
@@ -311,7 +316,7 @@
     })
 
     //DrawArrow()
-  
+
   </script>
 
 
@@ -331,6 +336,8 @@
       manga = 'AtackTitans'
       $('#curr_manga').text('Текущая манга : "Атака титанов"')
     }
+
+
 
 
     var vue_catalog = new Vue({
@@ -354,6 +361,7 @@
         },
         getMangas() {
           self = this
+          showPreloader()
           axios.get('/AniReader/getMangas')
             .then(response => {
               self.mangas = response.data.mangas
@@ -376,7 +384,7 @@
 
               })
 
-
+              hidePreloader()
             })
             .catch(err => {
               Swal.fire(`${err}`)
@@ -399,11 +407,9 @@
         current_manga: '',
         current_chapter: '',
         chapters: [],
-
       },
       methods: {
         show() {
-
           screens.forEach(element => {
             if (this === element) {
               this.seen = true
@@ -411,20 +417,15 @@
               element.seen = false
             }
           })
-
-
-
-
         },
         openManga(manga) {
           this.current_manga = manga
           this.getChapters(manga)
           this.show()
-
-
         },
         getChapters(manga) {
 
+          showPreloader()
           axios.get('/AniReader/getChapters', { params: { manga: this.current_manga } })
             .then(response => {
 
@@ -445,7 +446,7 @@
 
 
 
-
+              hidePreloader()
             })
             .catch(err => {
               Swal.fire(`${err}`)
@@ -465,7 +466,7 @@
         chapter: ''
       },
       methods: {
-        show(){
+        show() {
           screens.forEach(element => {
             if (this === element) {
               this.seen = true
@@ -476,10 +477,11 @@
           $('#title').show()
         },
         openChapter(chapter, page = 1) {
+          showPreloader()
           current_page = page
           this.current_page = current_page
           vue_chapter.current_chapter = chapter
-          this.chapter = typeof(chapter)==='string'?chapter:chapter.innerText
+          this.chapter = typeof (chapter) === 'string' ? chapter : chapter.innerText
           chapter = this.chapter
           if (this.chapter === null) {
             this.chapter = chapters[chapters.length - 1]
@@ -489,11 +491,11 @@
           } else {
             page = page
           }
-         
+
           window.localStorage.setItem('chapter', this.chapter)
           window.localStorage.setItem('page', current_page)
 
-          nav_mob   = new Array(...document.querySelector('#chapter-body').children)
+          nav_mob = new Array(...document.querySelector('#chapter-body').children)
 
           nav_mob.forEach(i => {
             i.name = i.innerText
@@ -526,8 +528,9 @@
               })
               DrawArrow()
               preloadImages(pages)
-              
+
               jpage[getCurrentIndex()].Show()
+              hidePreloader()
             })
             .catch((err) => {
               console.log(err)
@@ -535,7 +538,7 @@
             })
 
 
-          
+
 
           this.show()
 
@@ -597,74 +600,86 @@
 
     }
 
-    function getCurrentIndex(){
-      return current_page-1
+    function getCurrentIndex() {
+      return current_page - 1
     }
 
     $('#prev').click(() => {
-            jpage.forEach(i => {
-              if (i.isShow) {
-                current_page = current_page - 1
-                vue_page.current_page=current_page
-              }
-            })
+      jpage.forEach(i => {
+        if (i.isShow) {
+          current_page = current_page - 1
+          vue_page.current_page = current_page
+        }
+      })
 
-            if (current_page < 1) {
-              current_page = 1
-              jpage[0].Show()
-            } else {
-              jpage[getCurrentIndex()].Show()
-            }
-
-
-
-            DrawTitle(current_page)
-
-
-            if ($('#prev').text() === 'Пред. глава') {
-              if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1] === undefined) {
-                Swal.fire('Глава не найдена')
-              } else {
-                chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1]
-                $('#prev').text('<')
-                vue_page.openChapter(chapter, page = 1)
-              }
-            }
-            DrawArrow()
-
-
-          })
-
-          $('#next').click(() => {
-            jpage.forEach(i => {
-              if (i.isShow) {
-                current_page = current_page + 1
-                vue_page.current_page=current_page
-              }
-            })
-
-            if (current_page > jpage.length) {
-              current_page = jpage.length
-              jpage[jpage.length - 1].Show()
-            } else {
-              jpage[getCurrentIndex()].Show()
-            }
-
-            DrawTitle()
-
-            if ($('#next').text() === 'След. глава') {
-              if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1] === undefined) {
-                Swal.fire('Глава не найдена')
-              } else {
-                chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1]
-                vue_page.OpenChapter(chapter)
-              }
-            }
-            DrawArrow()
+      if (current_page < 1) {
+        current_page = 1
+        jpage[0].Show()
+      } else {
+        jpage[getCurrentIndex()].Show()
+      }
 
 
 
-          })
+      DrawTitle(current_page)
+
+
+      if ($('#prev').text() === 'Пред. глава') {
+        if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1] === undefined) {
+          Swal.fire('Глава не найдена')
+        } else {
+          chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1]
+          $('#prev').text('<')
+          vue_page.openChapter(chapter, page = 1)
+        }
+      }
+      DrawArrow()
+
+
+    })
+
+    $('#next').click(() => {
+      jpage.forEach(i => {
+        if (i.isShow) {
+          current_page = current_page + 1
+          vue_page.current_page = current_page
+        }
+      })
+
+      if (current_page > jpage.length) {
+        current_page = jpage.length
+        jpage[jpage.length - 1].Show()
+      } else {
+        jpage[getCurrentIndex()].Show()
+      }
+
+      DrawTitle()
+
+      if ($('#next').text() === 'След. глава') {
+        if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1] === undefined) {
+          Swal.fire('Глава не найдена')
+        } else {
+          chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1]
+          vue_page.OpenChapter(chapter)
+        }
+      }
+      DrawArrow()
+
+
+
+    })
+    function showPreloader() {
+      $('.preloader-wrapper').show()
+
+    }
+
+    function hidePreloader() {
+      $('.preloader-wrapper').hide()
+    }
+
+    $('.preloader-wrapper').css('position', 'absolute')
+    $('.preloader-wrapper').css('left', `${(window.innerWidth - $('.preloader-wrapper').width()) / 2}px`)
+    $('.preloader-wrapper').css('bottom', `${(window.innerHeight - $('.preloader-wrapper').height()) / 2}px`)
 
 
   </script>
