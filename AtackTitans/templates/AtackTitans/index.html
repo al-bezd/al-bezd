@@ -48,16 +48,7 @@
         <li>
           <div class="divider"></div>
         </li>
-        <li>
 
-          <div class="collapsible-header grey darken-3"><i class="material-icons">whatshot</i>Атака титанов</div>
-          <div class="collapsible-body">
-            <ul class="collection" id="AtackTitans_chapters">
-            </ul>
-          </div>
-
-
-        </li>
         <li>
           <a class=" catalog"><i class="material-icons">turned_in</i>Каталог</a>
         </li>
@@ -218,33 +209,7 @@
 
   
 
-    function DrawArrow() {
-      if (current_page === 1) {
-        $('#prev').text('Пред. глава')
-      } else {
-        $('#prev').text('<')
-      }
-
-      if (current_index() === pages.length - 1 && pages.length > 0) {
-        $('#next').text('След. глава')
-      } else {
-        $('#next').text('>')
-      }
-      DrawTitle()
-
-    }
-
-    function DrawTitle() {
-      //if (p > -1) {
-
-      chapter = window.localStorage.getItem('chapter')
-      window.localStorage.setItem('page', current_page)
-      document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
-      //}
-      $('#curr_chapter').text(`Текущая глава : ${chapter}`)
-      //DrawArrow()
-
-    }
+  
 
     function preloadImages(array) {
       if (!preloadImages.list) {
@@ -286,7 +251,7 @@
             chapter = chapters[chapters.length - 1]
           }
           if (page === null) {
-            page = 0
+            page = 1
           } else {
             page = page
           }
@@ -344,14 +309,14 @@
       }
     })
 
-    DrawArrow()
+    //DrawArrow()
   
   </script>
 
 
   <script>
     let jpage = []
-    let current_page = 0
+    let current_page = 1
     var manga = window.localStorage.getItem('manga')
     var chapter = window.localStorage.getItem('chapter')
     var page = window.localStorage.getItem('page')
@@ -384,10 +349,6 @@
               element.seen = false
             }
           })
-
-
-
-
 
         },
         getMangas() {
@@ -470,7 +431,7 @@
 
               $('#chapter-body').html('')
               this.chapters.forEach(chap => {
-                $('#chapter-body').append(` <li class="collection-item "onclick="vue_page.openChapter(this,0)">${chap}</li>`)
+                $('#chapter-body').append(` <li class="collection-item "onclick="vue_page.openChapter(this,1)">${chap}</li>`)
               })
 
 
@@ -514,7 +475,11 @@
           $('#title').show()
         },
         openChapter(chapter, page = 1) {
-          this.chapter = chapter.innerText
+          current_page = page
+          this.current_page = current_page
+          vue_chapter.current_chapter = chapter
+          this.chapter = typeof(chapter)==='string'?chapter:chapter.innerText
+          chapter = this.chapter
           if (this.chapter === null) {
             this.chapter = chapters[chapters.length - 1]
           }
@@ -526,19 +491,14 @@
          
           window.localStorage.setItem('chapter', this.chapter)
           window.localStorage.setItem('page', current_page)
-          //jarr = []
-          nav_mob   = new Array(...document.querySelector('#chapter-body').children)
-          //nav_mob.forEach(i=>{
-          //  jarr.append($(i))
-          //})
-          //nav_mob=jarr
 
+          nav_mob   = new Array(...document.querySelector('#chapter-body').children)
 
           nav_mob.forEach(i => {
             i.name = i.innerText
 
             if (i.name === this.chapter) {
-              i.innerHTML = ` <li class="collection-item "onclick="vue_page.openChapter(this,1)">${i.name}</li>`
+              //i.innerHTML = `${i.name}`
               i.classList.add('purple')
               i.classList.add('lighten-5')
             } else {
@@ -551,12 +511,12 @@
           $('#base').html('<div id="js-carousel-1"></div>')
 
           pages = []
-          axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: this.chapter } })
+          axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: chapter } })
             .then((response) => {
+              jpage = []
               pages = response.data.pages
               pages = pages.sort()
-
-
+              $('#js-carousel-1').html('')
               pages.forEach((link) => {
                 tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
                 tmp.hide()
@@ -565,80 +525,16 @@
               })
               DrawArrow()
               preloadImages(pages)
-              jpage[this.getCurrentIndex].Show()
+              
+              jpage[getCurrentIndex()].Show()
             })
             .catch((err) => {
               console.log(err)
               Swal.fire(`${err}`)
             })
 
-          //DrawTitle()
 
-
-
-
-          $('#prev').click(() => {
-            jpage.forEach(i => {
-              if (i.isShow) {
-                current_page = current_page - 1
-              }
-            })
-
-            if (current_page < 1) {
-              current_page = 1
-              jpage[0].Show()
-            } else {
-              jpage[current_index()].Show()
-            }
-
-
-
-            DrawTitle(current_page)
-
-
-            if ($('#prev').text() === 'Пред. глава') {
-              if (chapters[chapters.indexOf(chapter) + 1] === undefined) {
-                Swal.fire('Глава не найдена')
-              } else {
-                chapter = chapters[chapters.indexOf(chapter) + 1]
-                $('#prev').text('<')
-                OpenChapter(chapter)
-              }
-            }
-            DrawArrow()
-
-
-          })
-
-          $('#next').click(() => {
-            jpage.forEach(i => {
-              if (i.isShow) {
-                current_page = current_page + 1
-              }
-            })
-
-            if (current_page > jpage.length) {
-              current_page = jpage.length
-              jpage[jpage.length - 1].Show()
-            } else {
-              jpage[current_index()].Show()
-            }
-
-            DrawTitle()
-
-            if ($('#next').text() === 'След. глава') {
-              if (chapters[chapters.indexOf(chapter) - 1] === undefined) {
-                Swal.fire('Глава не найдена')
-              } else {
-                chapter = chapters[chapters.indexOf(chapter) - 1]
-                OpenChapter(chapter)
-              }
-            }
-            DrawArrow()
-
-
-
-          })
+          
 
           this.show()
 
@@ -649,11 +545,6 @@
         },
         prev() {
 
-        }
-      },
-      computed:{
-        getCurrentIndex(){
-          return this.current_page-1
         }
       }
     })
@@ -675,6 +566,104 @@
 
     })
 
+
+
+    function DrawArrow() {
+      if (vue_page.current_page === 1) {
+        $('#prev').text('Пред. глава')
+      } else {
+        $('#prev').text('<')
+      }
+
+      if (current_index() === pages.length - 1 && pages.length > 0) {
+        $('#next').text('След. глава')
+      } else {
+        $('#next').text('>')
+      }
+      DrawTitle()
+
+    }
+
+    function DrawTitle() {
+      //if (p > -1) {
+      current_page = vue_page.current_page
+      chapter = window.localStorage.getItem('chapter')
+      window.localStorage.setItem('page', vue_page.current_page)
+      document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
+      //}
+      $('#curr_chapter').text(`Текущая глава : ${chapter}`)
+      //DrawArrow()
+
+    }
+
+    function getCurrentIndex(){
+      return current_page-1
+    }
+
+    $('#prev').click(() => {
+            jpage.forEach(i => {
+              if (i.isShow) {
+                current_page = current_page - 1
+                vue_page.current_page=current_page
+              }
+            })
+
+            if (current_page < 1) {
+              current_page = 1
+              jpage[0].Show()
+            } else {
+              jpage[getCurrentIndex()].Show()
+            }
+
+
+
+            DrawTitle(current_page)
+
+
+            if ($('#prev').text() === 'Пред. глава') {
+              if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1] === undefined) {
+                Swal.fire('Глава не найдена')
+              } else {
+                chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) + 1]
+                $('#prev').text('<')
+                vue_page.openChapter(chapter, page = 1)
+              }
+            }
+            DrawArrow()
+
+
+          })
+
+          $('#next').click(() => {
+            jpage.forEach(i => {
+              if (i.isShow) {
+                current_page = current_page + 1
+                vue_page.current_page=current_page
+              }
+            })
+
+            if (current_page > jpage.length) {
+              current_page = jpage.length
+              jpage[jpage.length - 1].Show()
+            } else {
+              jpage[getCurrentIndex()].Show()
+            }
+
+            DrawTitle()
+
+            if ($('#next').text() === 'След. глава') {
+              if (vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1] === undefined) {
+                Swal.fire('Глава не найдена')
+              } else {
+                chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1]
+                vue_page.OpenChapter(chapter)
+              }
+            }
+            DrawArrow()
+
+
+
+          })
 
 
   </script>
