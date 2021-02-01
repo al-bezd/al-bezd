@@ -15,9 +15,10 @@
   <script src="/static/js/materialize.min.js"></script>
   <link rel="stylesheet" href="/static/css/owl.carousel.min.css">
   <link rel="stylesheet" href="/static/css/owl.theme.default.min.css">
-  <script data-ad-client="ca-pub-9869058068347155" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script data-ad-client="ca-pub-9869058068347155" async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <style>
-    .arrows{
+    .arrows {
       position: fixed;
       bottom: 10px;
       width: 100%;
@@ -58,35 +59,35 @@
 
         </li>
         <li>
-          <a class=" catalog" ><i class="material-icons">turned_in</i>Каталог</a>
+          <a class=" catalog"><i class="material-icons">turned_in</i>Каталог</a>
         </li>
         <li>
           <a class=" inwork"><i class="material-icons">turned_in</i>Избранное</a>
         </li>
         <li>
-          <a class=" inwork" ><i class="material-icons">rotate_right</i>Случайная манга</a>
+          <a class=" inwork"><i class="material-icons">rotate_right</i>Случайная манга</a>
         </li>
         <li>
-          <a class=" inwork" ><i class="material-icons">search</i>Поиск</a>
+          <a class=" inwork"><i class="material-icons">search</i>Поиск</a>
         </li>
         <li>
-          <a class=" inwork" ><i class="material-icons">turned_in_not</i>Не прочитано</a>
+          <a class=" inwork"><i class="material-icons">turned_in_not</i>Не прочитано</a>
         </li>
 
         <li>
-          <a class=" inwork" ><i class="material-icons">share</i>Поделиться</a>
+          <a class=" inwork"><i class="material-icons">share</i>Поделиться</a>
         </li>
         <li>
-          <a class=" inwork" ><i class="material-icons">star</i>Оценить приложение</a>
+          <a class=" inwork"><i class="material-icons">star</i>Оценить приложение</a>
         </li>
         <li>
-          <a class=" inwork" href="showADW" ><i class="material-icons">ondemand_video</i>Поддержать проект</a>
+          <a class=" inwork" href="showADW"><i class="material-icons">ondemand_video</i>Поддержать проект</a>
         </li>
         <li>
           <a class="" href="mailto:"><i class="material-icons">feedback</i>Написать нам</a>
         </li>
 
-        <li><a class="  inwork" href="#!"><i class="material-icons" >control_point</i>Добавить комиксы</a></li>
+        <li><a class="  inwork" href="#!"><i class="material-icons">control_point</i>Добавить комиксы</a></li>
 
       </ul>
       <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -94,22 +95,22 @@
   </nav>
 
   <div id="catalog" v-show="seen">
-    <div class="row">
-      <div class="col s6 l4 m3" v-for="manga in mangas" :key="manga.title">
+    <div class="row" id="catalog-body">
 
-        <div class="card z-depth-2" >
-          <div class="card-image">
-            <img :src="manga.title_image">
+      <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
           </div>
-          <div class="card-content" >
-            <p>{{manga.title}}</p>
+          <div class="gap-patch">
+            <div class="circle"></div>
           </div>
-          <div class="card-action center">
-            <span onclick="vue_catalog.readManga(this)" :id-manga="manga.title" >Читать</span>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
           </div>
         </div>
-
       </div>
+
     </div>
 
   </div>
@@ -118,8 +119,8 @@
 
     <div class="row">
       <div class="col s12 m12 l12">
-        <ul class="collection">
-          <li class="collection-item huita" v-for="chap in chapters"  :text="chap" onclick="vue_page.openChapter(this)">{{chap}}</li>
+        <ul class="collection" id="chapter-body">
+
         </ul>
       </div>
     </div>
@@ -127,40 +128,40 @@
 
   </div>
 
-  <div id="page"    v-show="seen">
-      <div class="row" id="base">
-        <div id="js-carousel-1"></div>
+  <div id="page" v-show="seen">
+    <div class="row" id="base">
+      <div id="js-carousel-1"></div>
+    </div>
+
+    <div class="row center arrows">
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
+          < </a>
       </div>
-
-      <div class="row center arrows">
-        <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="prev">
-            < </a>
-        </div>
-        <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
-      </div>
+      <div class="col s6 m6 l6"><a style="width: 100%;" class="btn-large blue-grey darken-4" id="next"> > </a></div>
+    </div>
 
 
-      <div id="modal1" class="modal">
-        <div class="modal-content">
-          <h6 id="curr_manga">Текущая манга : </h6>
-          <h6 id="curr_chapter">Текущая глава : </h6>
-          <div class="row">
-            <div class="input-field col s6 l6 m6" hidden>
-              <select id="chapters_list">
-              </select>
-              <label>Выберите главу</label>
-            </div>
-            <div class="input-field col s12 l12 m12">
-              <select id="pages_list">
-              </select>
-              <label>Выберите страницу</label>
-            </div>
+    <div id="modal1" class="modal">
+      <div class="modal-content">
+        <h6 id="curr_manga">Текущая манга : </h6>
+        <h6 id="curr_chapter">Текущая глава : </h6>
+        <div class="row">
+          <div class="input-field col s6 l6 m6" hidden>
+            <select id="chapters_list">
+            </select>
+            <label>Выберите главу</label>
+          </div>
+          <div class="input-field col s12 l12 m12">
+            <select id="pages_list">
+            </select>
+            <label>Выберите страницу</label>
           </div>
         </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-close  waves-green btn-flat" id="select_page">Выбрать</a>
-        </div>
       </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-close  waves-green btn-flat" id="select_page">Выбрать</a>
+      </div>
+    </div>
 
 
 
@@ -179,66 +180,55 @@
   <script>
 
 
-    document.addEventListener('DOMContentLoaded',  ()=> {
+    document.addEventListener('DOMContentLoaded', () => {
       var elems = document.querySelectorAll('#modal1')
       var instances = M.Modal.init(elems)
     })
-    $('.inwork').click(event=>{
+    $('.inwork').click(event => {
       Swal.fire('Функция в разработке')
     })
- 
-    jQuery.prototype.Show=function(){
-      this.isShow=true
-      jpage.forEach(i=>{
-        if(i!==this){
+
+    jQuery.prototype.Show = function () {
+      this.isShow = true
+      jpage.forEach(i => {
+        if (i !== this) {
           i.Hide()
         }
       })
       this.show()
     }
 
-    jQuery.prototype.Hide=function(){
-      this.isShow=false
+    jQuery.prototype.Hide = function () {
+      this.isShow = false
       this.hide()
     }
 
-    function current_index(){
-      return current_page-1
+    function current_index() {
+      return current_page - 1
     }
 
     M.AutoInit()
-    if (window.localStorage.getItem('AnyReaderDisclamer')===null){
+    if (window.localStorage.getItem('AnyReaderDisclamer') === null) {
       Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
-      window.localStorage.setItem('AnyReaderDisclamer',true)
-    }
-    
-
-    let jpage = []
-    let current_page = 0
-    var manga = window.localStorage.getItem('manga')
-    var chapter = window.localStorage.getItem('chapter')
-    var page = window.localStorage.getItem('page')
-    if (page!==null && page!=="NaN"){
-      current_page = Number(page)
-    }
-    
-    let pages = []
-    if (manga === null) {
-      manga = 'AtackTitans'
-      $('#curr_manga').text('Текущая манга : "Атака титанов"')
+      window.localStorage.setItem('AnyReaderDisclamer', true)
     }
 
-    function DrawArrow(){
-      if(current_page===1){
-        $('#prev').text('Пред. глава') 
-      }else{
-        $('#prev').text('<') 
+
+
+
+  
+
+    function DrawArrow() {
+      if (current_page === 1) {
+        $('#prev').text('Пред. глава')
+      } else {
+        $('#prev').text('<')
       }
 
-      if(current_index() === pages.length-1 && pages.length>0){
-        $('#next').text('След. глава') 
-      }else{
-        $('#next').text('>') 
+      if (current_index() === pages.length - 1 && pages.length > 0) {
+        $('#next').text('След. глава')
+      } else {
+        $('#next').text('>')
       }
       DrawTitle()
 
@@ -247,132 +237,14 @@
     function DrawTitle() {
       //if (p > -1) {
 
-        chapter = window.localStorage.getItem('chapter')
-        window.localStorage.setItem('page', current_page)
-        document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
+      chapter = window.localStorage.getItem('chapter')
+      window.localStorage.setItem('page', current_page)
+      document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
       //}
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
       //DrawArrow()
-      
+
     }
-
-    function OpenChapter(item, page = 1) {
-      current_page = page
-      chapter = item
-      window.localStorage.setItem('chapter', item)
-      window.localStorage.setItem('page', page)
-      jpage = []
-      
-    
-      nav_mob = new Array(...document.querySelector('#nav-mobile').querySelector('#AtackTitans_chapters').children)
-
-
-      nav_mob.forEach(i => {
-        i.name = i.querySelector('.OpenChapter').name
-
-        if (i.name === item) {
-          i.innerHTML = `<a onclick="OpenChapter('${i.name}')" name="${i.name}" class="OpenChapter">${i.name}</a>`
-          i.classList.add('purple')
-          i.classList.add('lighten-5')
-        }else{
-          i.classList.remove('purple')
-          i.classList.remove('lighten-5')
-        }
-
-      })
-
-      $('#base').html('<div id="js-carousel-1"></div>')
-
-      pages = []
-      axios.get('/AniReader/getLinks', { params: { manga: manga, chapter: chapter } })
-        .then((response) => {
-          pages = response.data.pages
-          pages = pages.sort()
-          
-
-          pages.forEach((link) => {
-            tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
-            tmp.hide()
-            jpage.push(tmp)
-            $('#js-carousel-1').append(tmp)
-          })
-          DrawArrow()
-          preloadImages(pages)
-          jpage[current_index()].Show()
-        })
-        .catch((err) => {
-          console.log(err)
-          Swal.fire(`${err}`)
-        })
-        
-        //DrawTitle()
-    }
-
-
-      $('#prev').click(() => {
-        jpage.forEach(i=>{
-          if(i.isShow){
-            current_page=current_page-1
-          }
-        })
-
-        if (current_page < 1){
-          current_page=1
-          jpage[0].Show() 
-        }else{
-          jpage[current_index()].Show()
-        }
-
-        
-   
-        DrawTitle(current_page)
-
-        
-        if($('#prev').text()==='Пред. глава'){
-          if(chapters[chapters.indexOf(chapter)+1]===undefined){
-            Swal.fire('Глава не найдена')
-          }else{
-            chapter = chapters[chapters.indexOf(chapter)+1]
-            $('#prev').text('<') 
-            OpenChapter(chapter)
-          }
-        }
-        DrawArrow()
- 
-
-      })
-
-      $('#next').click(() => {
-        jpage.forEach(i=>{
-          if(i.isShow){
-            current_page=current_page+1
-          }
-        })
-
-        if (current_page > jpage.length){
-          current_page=jpage.length
-          jpage[jpage.length-1].Show() 
-        }else{
-          jpage[current_index()].Show()
-        }
-
-        DrawTitle()
-
-        if($('#next').text()==='След. глава'){
-          if(chapters[chapters.indexOf(chapter)-1]===undefined){
-            Swal.fire('Глава не найдена')
-          }else{
-            chapter = chapters[chapters.indexOf(chapter)-1]
-            OpenChapter(chapter)
-          }
-        }
-        DrawArrow()
-
-        
-
-      })
-      
-    
 
     function preloadImages(array) {
       if (!preloadImages.list) {
@@ -404,7 +276,7 @@
           chapters = chapters.reverse()
           chapters.forEach((chapter) => {
             template = `<li class="collection-item"><a onclick="OpenChapter('${chapter}')" name="${chapter}" class="OpenChapter">${chapter}</a></li>`
-            
+
 
             //$('#nav').append(template)
             $('#AtackTitans_chapters').append(template)
@@ -472,30 +344,38 @@
       }
     })
 
-
-
-    $(document).ready(() => {
-
-      //document.querySelector('#title').innerHTML = `${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}`
-      //GetChapters()
-      //$('.img').css({ 'width': `${window.innerWidth}px` })
-
-      
-      DrawArrow()
-    })
+    DrawArrow()
+  
   </script>
 
 
   <script>
+    let jpage = []
+    let current_page = 0
+    var manga = window.localStorage.getItem('manga')
+    var chapter = window.localStorage.getItem('chapter')
+    var page = window.localStorage.getItem('page')
+
+    if (page !== null && page !== "NaN") {
+      current_page = Number(page)
+    }
+
+    let pages = []
+    if (manga === null) {
+      manga = 'AtackTitans'
+      $('#curr_manga').text('Текущая манга : "Атака титанов"')
+    }
+
 
     var vue_catalog = new Vue({
       el: '#catalog',
       data: {
-        seen:true,
-        mangas:[]
+        seen: true,
+        mangas: []
       },
-      methods:{
+      methods: {
         show() {
+          $('.sidenav').sidenav('close')
           $('#title').hide()
           screens.forEach(element => {
             if (this === element) {
@@ -504,18 +384,43 @@
               element.seen = false
             }
           })
+
+
+
+
+
         },
-        getMangas(){
-          self=this
+        getMangas() {
+          self = this
           axios.get('/AniReader/getMangas')
-          .then(response=>{
-            self.mangas = response.data.mangas
-          })
-          .catch(err=>{
-            Swal.fire(`${err}`)
-          })
+            .then(response => {
+              self.mangas = response.data.mangas
+
+              $('#catalog-body').html('')
+              response.data.mangas.forEach(manga => {
+                $('#catalog-body').append(`<div class="col s6 l4 m3">
+              <div class="card z-depth-2" >
+                  <div class="card-image">
+                      <img src="${manga.title_image}">
+                  </div>
+                  <div class="card-content" >
+              <p>${manga.title}</p>
+            </div>
+            <div class="card-action center">
+              <span onclick="vue_catalog.readManga(this)" id-manga="${manga.title}" >Читать</span>
+            </div>
+          </div>
+          </div>`)
+
+              })
+
+
+            })
+            .catch(err => {
+              Swal.fire(`${err}`)
+            })
         },
-        readManga(el){
+        readManga(el) {
           //console.log(el.getAttribute('id-manga'))
           vue_chapter.openManga(el.getAttribute('id-manga'))
 
@@ -528,14 +433,15 @@
       el: '#chapter',
       data: {
         message: 'Привет, Vue!',
-        seen:true,
-        current_manga:'',
-        current_chapter:'',
-        chapters:[]
+        seen: true,
+        current_manga: '',
+        current_chapter: '',
+        chapters: [],
+
       },
-      methods:{
+      methods: {
         show() {
-          $('#title').show()
+
           screens.forEach(element => {
             if (this === element) {
               this.seen = true
@@ -543,39 +449,45 @@
               element.seen = false
             }
           })
-          l = [...$('.huita')]
-          l.forEach(i=>{
-            i.innerText = i.getAttribute('text')
-          })
+
 
 
 
         },
-        openManga(manga){
+        openManga(manga) {
           this.current_manga = manga
           this.getChapters(manga)
           this.show()
-          
+
 
         },
-        getChapters(manga){
+        getChapters(manga) {
 
-          axios.get('/AniReader/getChapters',{params:{manga:manga}})
-          .then(response=>{
+          axios.get('/AniReader/getChapters', { params: { manga: this.current_manga } })
+            .then(response => {
 
-            this.chapters = response.data.chapters.sort().reverse()
-            l = [...$('.huita')]
-            l.forEach(i=>{
-              i.innerText = i.getAttribute('text')
+              this.chapters = response.data.chapters.sort().reverse()
+
+              $('#chapter-body').html('')
+              this.chapters.forEach(chap => {
+                $('#chapter-body').append(` <li class="collection-item "onclick="vue_page.openChapter(this,0)">${chap}</li>`)
+              })
+
+
+
+
+              l = [...$('.huita')]
+              l.forEach(i => {
+                i.innerText = i.getAttribute('text')
+              })
+
+
+
+
             })
-
-
-
-            
-          })
-          .catch(err=>{
-            Swal.fire(`${err}`)
-          })
+            .catch(err => {
+              Swal.fire(`${err}`)
+            })
         }
       }
     })
@@ -585,31 +497,163 @@
       el: '#page',
       data: {
         message: 'Привет, Vue!',
-        seen:true,
-        current_page : 1,
-        current_index:this.current_page-1,
-        chapter:''
+        seen: true,
+        current_page: 1,
+        current_index: this.current_page - 1,
+        chapter: ''
       },
-      methods:{
-        openChapter(chapter){
-          this.chapter = chapter
-          if (chapter === null) {
-            chapter = chapters[chapters.length - 1]
+      methods: {
+        show(){
+          screens.forEach(element => {
+            if (this === element) {
+              this.seen = true
+            } else {
+              element.seen = false
+            }
+          })
+          $('#title').show()
+        },
+        openChapter(chapter, page = 1) {
+          this.chapter = chapter.innerText
+          if (this.chapter === null) {
+            this.chapter = chapters[chapters.length - 1]
           }
           if (page === null) {
-            page = 0
+            page = 1
           } else {
             page = page
           }
-          OpenChapter(chapter, Number(page))
+         
+          window.localStorage.setItem('chapter', this.chapter)
+          window.localStorage.setItem('page', current_page)
+          //jarr = []
+          nav_mob   = new Array(...document.querySelector('#chapter-body').children)
+          //nav_mob.forEach(i=>{
+          //  jarr.append($(i))
+          //})
+          //nav_mob=jarr
+
+
+          nav_mob.forEach(i => {
+            i.name = i.innerText
+
+            if (i.name === this.chapter) {
+              i.innerHTML = ` <li class="collection-item "onclick="vue_page.openChapter(this,1)">${i.name}</li>`
+              i.classList.add('purple')
+              i.classList.add('lighten-5')
+            } else {
+              i.classList.remove('purple')
+              i.classList.remove('lighten-5')
+            }
+
+          })
+
+          $('#base').html('<div id="js-carousel-1"></div>')
+
+          pages = []
+          axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: this.chapter } })
+            .then((response) => {
+              pages = response.data.pages
+              pages = pages.sort()
+
+
+              pages.forEach((link) => {
+                tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
+                tmp.hide()
+                jpage.push(tmp)
+                $('#js-carousel-1').append(tmp)
+              })
+              DrawArrow()
+              preloadImages(pages)
+              jpage[this.getCurrentIndex].Show()
+            })
+            .catch((err) => {
+              console.log(err)
+              Swal.fire(`${err}`)
+            })
+
+          //DrawTitle()
+
+
+
+
+          $('#prev').click(() => {
+            jpage.forEach(i => {
+              if (i.isShow) {
+                current_page = current_page - 1
+              }
+            })
+
+            if (current_page < 1) {
+              current_page = 1
+              jpage[0].Show()
+            } else {
+              jpage[current_index()].Show()
+            }
+
+
+
+            DrawTitle(current_page)
+
+
+            if ($('#prev').text() === 'Пред. глава') {
+              if (chapters[chapters.indexOf(chapter) + 1] === undefined) {
+                Swal.fire('Глава не найдена')
+              } else {
+                chapter = chapters[chapters.indexOf(chapter) + 1]
+                $('#prev').text('<')
+                OpenChapter(chapter)
+              }
+            }
+            DrawArrow()
+
+
+          })
+
+          $('#next').click(() => {
+            jpage.forEach(i => {
+              if (i.isShow) {
+                current_page = current_page + 1
+              }
+            })
+
+            if (current_page > jpage.length) {
+              current_page = jpage.length
+              jpage[jpage.length - 1].Show()
+            } else {
+              jpage[current_index()].Show()
+            }
+
+            DrawTitle()
+
+            if ($('#next').text() === 'След. глава') {
+              if (chapters[chapters.indexOf(chapter) - 1] === undefined) {
+                Swal.fire('Глава не найдена')
+              } else {
+                chapter = chapters[chapters.indexOf(chapter) - 1]
+                OpenChapter(chapter)
+              }
+            }
+            DrawArrow()
+
+
+
+          })
+
+          this.show()
 
 
         },
-        next(){
+        next() {
 
         },
-        prev(){
+        prev() {
 
+        }
+      },
+      computed:{
+        getCurrentIndex(){
+          return this.current_page-1
         }
       }
     })
@@ -625,7 +669,7 @@
     vue_catalog.show()
     $(document).ready(() => {
 
-      $('.catalog').click(event=>{
+      $('.catalog').click(event => {
         vue_catalog.show()
       })
 
