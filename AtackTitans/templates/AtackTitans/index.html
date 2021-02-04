@@ -88,6 +88,8 @@
 
   <div id="catalog" v-show="seen">
     <div class="row" id="catalog-body">
+      
+
 
 
     </div>
@@ -98,7 +100,7 @@
 
     <div class="row">
       <div class="col s12 m12 l12">
-        <ul class="collection" id="chapter-body">
+        <ul class="collection" id="chapter-body" >
 
 
 
@@ -124,14 +126,9 @@
 
     <div id="modal1" class="modal">
       <div class="modal-content">
-        <h6 id="curr_manga">Текущая манга : </h6>
-        <h6 id="curr_chapter">Текущая глава : </h6>
+
         <div class="row">
-          <div class="input-field col s6 l6 m6" hidden>
-            <select id="chapters_list">
-            </select>
-            <label>Выберите главу</label>
-          </div>
+
           <div class="input-field col s12 l12 m12">
             <select id="pages_list">
             </select>
@@ -217,110 +214,8 @@
 
 
 
-    function preloadImages(array) {
-      if (!preloadImages.list) {
-        preloadImages.list = []
-      }
-      var list = preloadImages.list
-      array.forEach(i => {
-
-        var img = new Image()
-        img.onload = () => {
-          var index = list.indexOf(this)
-          if (index !== -1) {
-            list.splice(index, 1)
-          }
-        }
-        list.push(img)
-        img.src = array[i]
-
-      })
-
-    }
-
-    function GetChapters() {
-
-      axios.get('/AtackTitans/getChapters', { params: { manga: manga } })
-        .then((response) => {
-          chapters = response.data.chapters
-          chapters = chapters.sort()
-          chapters = chapters.reverse()
-          chapters.forEach((chapter) => {
-            template = `<li class="collection-item"><a onclick="OpenChapter('${chapter}')" name="${chapter}" class="OpenChapter">${chapter}</a></li>`
 
 
-            //$('#nav').append(template)
-            $('#AtackTitans_chapters').append(template)
-          })
-
-          if (chapter === null) {
-            chapter = chapters[chapters.length - 1]
-          }
-          if (page === null) {
-            page = 1
-          } else {
-            page = page
-          }
-          OpenChapter(chapter, Number(page))
-
-        })
-        .catch((err) => {
-          Swal.fire(`${err}`)
-        })
-
-    }
-
-    $('#title').click(event => {
-      var elems = document.querySelectorAll('#modal1')
-      var instances = M.Modal.init(elems)
-      instances[0].open()
-
-      chapters_list_tmp = ``
-      chapters.forEach((i) => {
-        if (i == chapter) {
-          chapters_list_tmp = chapters_list_tmp + `<option value="${chapter}" disabled selected>${chapter}</option>`
-        } else {
-          chapters_list_tmp = chapters_list_tmp + `<option value="${i}" >${i}</option>`
-        }
-      })
-      $('#chapters_list').html(chapters_list_tmp)
-
-      pages_list_tmp = ``
-      pages.forEach((i) => {
-        if (pages.indexOf(i) == current_index()) {
-          pages_list_tmp = pages_list_tmp + `<option value="${current_page}" disabled selected>${current_page}</option>`
-        } else {
-          pages_list_tmp = pages_list_tmp + `<option value="${Number(pages.indexOf(i)) + 1}" >${Number(pages.indexOf(i)) + 1}</option>`
-        }
-      })
-      $('#pages_list').html(pages_list_tmp)
-
-      $(document).ready(() => {
-        $('#chapters_list').formSelect()
-        $('#pages_list').formSelect()
-      })
-
-
-    })
-
-    $('#select_page').click(event => {
-      try {
-        if ($('#chapters_list').val() !== null) {
-          chapter = $('#chapters_list').val()
-        }
-        OpenChapter(chapter, Number($('#pages_list').val()))
-      } catch (err) {
-        Swal.fire(`${err}`)
-        console.log(err)
-      }
-    })
-
-    //DrawArrow()
-
-  </script>
-
-
-  <script>
     let jpage = []
     let current_page = 1
     var manga = window.localStorage.getItem('manga')
@@ -331,13 +226,22 @@
       current_page = Number(page)
     }
 
+
+
     let pages = []
     if (manga === null) {
       manga = 'AtackTitans'
       $('#curr_manga').text('Текущая манга : "Атака титанов"')
     }
 
-
+    var vue_main = new Vue({
+      data:{
+        manga:'',
+        chapter:'',
+        page:'',
+        index:''
+      }
+    })
 
 
     var vue_catalog = new Vue({
@@ -367,6 +271,7 @@
               self.mangas = response.data.mangas
 
               $('#catalog-body').html('')
+              ContinueReadInit()
               response.data.mangas.forEach(manga => {
                 $('#catalog-body').append(`<div class="col s6 l4 m3">
               <div class="card z-depth-2" >
@@ -409,7 +314,9 @@
         chapters: [],
       },
       methods: {
+        
         show() {
+          $('#chapter-body').hide()
           screens.forEach(element => {
             if (this === element) {
               this.seen = true
@@ -419,6 +326,7 @@
           })
         },
         openManga(manga) {
+          window.localStorage.setItem('manga',manga)
           this.current_manga = manga
           this.getChapters(manga)
           this.show()
@@ -430,7 +338,7 @@
             .then(response => {
 
               this.chapters = response.data.chapters.sort().reverse()
-
+              $('#chapter-body').show()
               $('#chapter-body').html('')
               this.chapters.forEach(chap => {
                 $('#chapter-body').append(` <li class="collection-item "onclick="vue_page.openChapter(this,1)">${chap}</li>`)
@@ -477,9 +385,11 @@
           $('#title').show()
         },
         openChapter(chapter, page = 1) {
+          window.localStorage.setItem('chapter',chapter)
           showPreloader()
           current_page = page
           this.current_page = current_page
+          this.page = current_page
           vue_chapter.current_chapter = chapter
           this.chapter = typeof (chapter) === 'string' ? chapter : chapter.innerText
           chapter = this.chapter
@@ -495,7 +405,7 @@
           window.localStorage.setItem('chapter', this.chapter)
           window.localStorage.setItem('page', current_page)
 
-          nav_mob = new Array(...document.querySelector('#chapter-body').children)
+          nav_mob = new Array(...document.querySelector('#chapter-body').querySelectorAll('li'))
 
           nav_mob.forEach(i => {
             i.name = i.innerText
@@ -517,8 +427,10 @@
           axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: chapter } })
             .then((response) => {
               jpage = []
+              
               pages = response.data.pages
               pages = pages.sort()
+              this.pages = pages
               $('#js-carousel-1').html('')
               pages.forEach((link) => {
                 tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
@@ -544,12 +456,7 @@
 
 
         },
-        next() {
 
-        },
-        prev() {
-
-        }
       }
     })
 
@@ -593,6 +500,7 @@
       current_page = vue_page.current_page
       chapter = window.localStorage.getItem('chapter')
       window.localStorage.setItem('page', vue_page.current_page)
+      window.localStorage.setItem('index', Number(vue_page.current_page)-1)
       document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
       //}
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
@@ -601,7 +509,7 @@
     }
 
     function getCurrentIndex() {
-      return current_page - 1
+      return vue_page.page - 1
     }
 
     $('#prev').click(() => {
@@ -609,6 +517,7 @@
         if (i.isShow) {
           current_page = current_page - 1
           vue_page.current_page = current_page
+          vue_page.page         = current_page
         }
       })
 
@@ -641,8 +550,9 @@
     $('#next').click(() => {
       jpage.forEach(i => {
         if (i.isShow) {
-          current_page = current_page + 1
+          current_page          = current_page + 1
           vue_page.current_page = current_page
+          vue_page.page         = current_page
         }
       })
 
@@ -660,7 +570,7 @@
           Swal.fire('Глава не найдена')
         } else {
           chapter = vue_chapter.chapters[vue_chapter.chapters.indexOf(chapter) - 1]
-          vue_page.OpenChapter(chapter)
+          vue_page.openChapter(chapter)
         }
       }
       DrawArrow()
@@ -668,9 +578,9 @@
 
 
     })
+    
     function showPreloader() {
       $('.preloader-wrapper').show()
-
     }
 
     function hidePreloader() {
@@ -681,6 +591,104 @@
     $('.preloader-wrapper').css('left', `${(window.innerWidth - $('.preloader-wrapper').width()) / 2}px`)
     $('.preloader-wrapper').css('bottom', `${(window.innerHeight - $('.preloader-wrapper').height()) / 2}px`)
 
+
+    
+    function preloadImages(array) {
+      if (!preloadImages.list) {
+        preloadImages.list = []
+      }
+      var list = preloadImages.list
+      array.forEach(i => {
+
+        var img = new Image()
+        img.onload = () => {
+          var index = list.indexOf(this)
+          if (index !== -1) {
+            list.splice(index, 1)
+          }
+        }
+        list.push(img)
+        img.src = array[i]
+
+      })
+
+    }
+
+   
+    $('#title').click(event => {
+      var elems = document.querySelectorAll('#modal1')
+      var instances = M.Modal.init(elems)
+      instances[0].open()
+
+
+
+      pages_list_tmp = ``
+      vue_page.pages.forEach((i) => {
+        if (vue_page.pages.indexOf(i) == getCurrentIndex()) {
+          pages_list_tmp = pages_list_tmp + `<option value="${Number(vue_page.pages.indexOf(i)) + 1}" disabled selected>${Number(vue_page.pages.indexOf(i)) + 1}</option>`
+        } else {
+          pages_list_tmp = pages_list_tmp + `<option value="${Number(vue_page.pages.indexOf(i)) + 1}" >${Number(vue_page.pages.indexOf(i)) + 1}</option>`
+        }
+      })
+      $('#pages_list').html(pages_list_tmp)
+
+      $(document).ready(() => {
+  
+        $('#pages_list').formSelect()
+      })
+
+
+    })
+
+    $('#select_page').click(event => {
+      try {
+        if ($('#chapters_list').val() !== null) {
+          chapter = $('#chapters_list').val()
+        }
+        vue_page.openChapter(vue_chapter.current_chapter, Number($('#pages_list').val()))
+      } catch (err) {
+        Swal.fire(`${err}`)
+        console.log(err)
+      }
+    })
+
+ 
+
+    function ContinueRead(manga,chapter,page){
+      vue_chapter.openManga(manga)
+      vue_page.openChapter(chapter,page)
+    }
+
+
+    function ContinueReadInit(){
+
+
+
+      $('#catalog-body').append(`<div class="col s12" id="continue-read">
+        <div class="card center">
+          <span><b>Продолжить ${window.localStorage.getItem('chapter') } - ${window.localStorage.getItem('page')}</b></span>
+          <div id="continue-read-img" style="height: 100px;width: 100%;background-size: cover;"></div>
+        </div>
+      </div>`)
+      $('#continue-read').hide() 
+
+      if (null !== window.localStorage.getItem('manga') && null !== window.localStorage.getItem('chapter') && null !== window.localStorage.getItem('page') ) {
+        $('#continue-read').show()
+        image_title = ''
+        vue_catalog.mangas.forEach(i=>{
+          if(i.title===manga){
+            image_title = i.title_image
+          }
+        })
+        //document.querySelector('#continue-read').querySelector('img').setAttribute('src',image_title)
+        //document.querySelector('#continue-read').querySelector('img').style('src',image_title)
+        $('#continue-read-img').css('backgroundImage',`url("${image_title}")`)
+      }
+      $('#continue-read').click(i=>{
+        vue_chapter.openManga(window.localStorage.getItem('manga'))
+        vue_page.openChapter(window.localStorage.getItem('chapter'),Number(window.localStorage.getItem('page') ))
+      })
+    }
 
   </script>
 </body>
