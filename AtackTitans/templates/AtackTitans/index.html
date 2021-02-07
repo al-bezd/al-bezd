@@ -653,6 +653,10 @@
           })
           
         })
+
+        while(!(jpage.length >= pages.length)){
+
+        }
         
 
         setTimeout(()=>{
@@ -663,7 +667,7 @@
 
         jpage[getCurrentIndex()].Show()
         hidePreloader()
-        },2000)
+        },0)
         
 
       } catch (err) {
