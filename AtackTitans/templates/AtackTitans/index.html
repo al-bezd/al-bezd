@@ -615,40 +615,24 @@
 
           DrawArrow()
           preloadImages(pages)
-          jpage.forEach(item=>{
 
-            toDataURL2(item.attr('src')).then(dataUrl => {
-
-              item.attr.src = dataUrl
-
-            })
-
-          })
       
           jpage[getCurrentIndex()].Show()
           hidePreloader()
 
-          //next_element = $(`[index="${getCurrentIndex()+1}"]`)
-          //if($(`.img attr[index="${hidePreloader()}"]`)){
-          //}
-
-
-          /*
-          image_blob = toDataURL2(link).then(dataUrl => {
-            try {
-              tmp = $(`<img class="img" src="${dataUrl}" alt="${link}" index="${pages.indexOf(link)}" style="width: 100%;">`)
-              tmp.hide()
-              jpage.push(tmp)
-              //$('#js-carousel-1').append(tmp)
-            } catch (err) {
-              console.log(err)
-              Swal.fire(`${err}`)
-            }
-          })
-          */
-
+   
 
           
+        })
+
+        jpage.forEach(item=>{
+
+          toDataURL2(item.attr('src')).then(dataUrl => {
+
+            item.attr.src = dataUrl
+
+          })
+
         })
 
         
