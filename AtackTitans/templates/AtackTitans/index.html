@@ -88,7 +88,7 @@
 
   <div id="catalog" v-show="seen">
     <div class="row" id="catalog-body">
-      
+
 
 
 
@@ -100,7 +100,7 @@
 
     <div class="row">
       <div class="col s12 m12 l12">
-        <ul class="collection" id="chapter-body" >
+        <ul class="collection" id="chapter-body">
 
 
 
@@ -126,9 +126,7 @@
 
     <div id="modal1" class="modal">
       <div class="modal-content">
-
         <div class="row">
-
           <div class="input-field col s12 l12 m12">
             <select id="pages_list">
             </select>
@@ -202,6 +200,10 @@
     }
 
     M.AutoInit()
+
+
+
+
     if (window.localStorage.getItem('AnyReaderDisclamer') === null) {
       Swal.fire('Отказ от ответственности,все материалы взяты из источников в открытом доступе')
       window.localStorage.setItem('AnyReaderDisclamer', true)
@@ -235,11 +237,11 @@
     }
 
     var vue_main = new Vue({
-      data:{
-        manga:'',
-        chapter:'',
-        page:'',
-        index:''
+      data: {
+        manga: '',
+        chapter: '',
+        page: '',
+        index: ''
       }
     })
 
@@ -273,7 +275,7 @@
               $('#catalog-body').html('')
               ContinueReadInit()
               response.data.mangas.forEach(manga => {
-                $('#catalog-body').append(`<div class="col s6 l4 m3">
+                $('#catalog-body').append(`<div class="col s6 l4 m3" id-manga="${manga.title}" onclick="vue_catalog.readManga(this)">
               <div class="card z-depth-2" >
                   <div class="card-image">
                       <img src="${manga.title_image}">
@@ -281,9 +283,7 @@
                   <div class="card-content" >
               <p>${manga.title}</p>
             </div>
-            <div class="card-action center">
-              <span onclick="vue_catalog.readManga(this)" id-manga="${manga.title}" >Читать</span>
-            </div>
+
           </div>
           </div>`)
 
@@ -314,7 +314,7 @@
         chapters: [],
       },
       methods: {
-        
+
         show() {
           $('#chapter-body').hide()
           screens.forEach(element => {
@@ -326,7 +326,7 @@
           })
         },
         openManga(manga) {
-          window.localStorage.setItem('manga',manga)
+          window.localStorage.setItem('manga', manga)
           this.current_manga = manga
           this.getChapters(manga)
           this.show()
@@ -385,7 +385,7 @@
           $('#title').show()
         },
         openChapter(chapter, page = 1) {
-          window.localStorage.setItem('chapter',chapter)
+          window.localStorage.setItem('chapter', chapter)
           showPreloader()
           current_page = page
           this.current_page = current_page
@@ -420,23 +420,28 @@
             }
 
           })
-
+          loadPages()
+          /*
           $('#base').html('<div id="js-carousel-1"></div>')
 
           pages = []
           axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: chapter } })
             .then((response) => {
               jpage = []
-              
+
               pages = response.data.pages
               pages = pages.sort()
               this.pages = pages
               $('#js-carousel-1').html('')
               pages.forEach((link) => {
-                tmp = $(`<img class="img" src="${link}" alt="${link}" style="width: 100%;">`)
+
+
+                tmp = $(`<img class="img" src="${toDataURL(link)}" alt="${link}" style="width: 100%;">`)
                 tmp.hide()
                 jpage.push(tmp)
                 $('#js-carousel-1').append(tmp)
+
+
               })
               DrawArrow()
               preloadImages(pages)
@@ -448,6 +453,7 @@
               console.log(err)
               Swal.fire(`${err}`)
             })
+            */
 
 
 
@@ -500,7 +506,7 @@
       current_page = vue_page.current_page
       chapter = window.localStorage.getItem('chapter')
       window.localStorage.setItem('page', vue_page.current_page)
-      window.localStorage.setItem('index', Number(vue_page.current_page)-1)
+      window.localStorage.setItem('index', Number(vue_page.current_page) - 1)
       document.querySelector('#title').innerHTML = `${chapter} - ${Number(current_page)}`
       //}
       $('#curr_chapter').text(`Текущая глава : ${chapter}`)
@@ -517,7 +523,7 @@
         if (i.isShow) {
           current_page = current_page - 1
           vue_page.current_page = current_page
-          vue_page.page         = current_page
+          vue_page.page = current_page
         }
       })
 
@@ -550,9 +556,9 @@
     $('#next').click(() => {
       jpage.forEach(i => {
         if (i.isShow) {
-          current_page          = current_page + 1
+          current_page = current_page + 1
           vue_page.current_page = current_page
-          vue_page.page         = current_page
+          vue_page.page = current_page
         }
       })
 
@@ -578,7 +584,7 @@
 
 
     })
-    
+
     function showPreloader() {
       $('.preloader-wrapper').show()
     }
@@ -592,7 +598,7 @@
     $('.preloader-wrapper').css('bottom', `${(window.innerHeight - $('.preloader-wrapper').height()) / 2}px`)
 
 
-    
+
     function preloadImages(array) {
       if (!preloadImages.list) {
         preloadImages.list = []
@@ -614,11 +620,111 @@
 
     }
 
-   
+    async function loadImage(url) {
+      const response = await fetch(url)
+      const blob = await response.blob()
+      return blob.then(data => { return data })
+    }
+
+
+
+    async function loadPages() {
+      $('#base').html('<div id="js-carousel-1"></div>')
+
+      pages = []
+      response = await axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: vue_page.chapter } })
+      try {
+        jpage = []
+        pages = response.data.pages
+        pages = pages.sort()
+        vue_page.pages = pages
+        $('#js-carousel-1').html('')
+        pages.forEach((link) => {
+          image_blob = toDataURL2(link).then(dataUrl => {
+            try {
+              tmp = $(`<img class="img" src="${dataUrl}" alt="${link}" index="${pages.indexOf(link)}" style="width: 100%;">`)
+              tmp.hide()
+              jpage.push(tmp)
+              //$('#js-carousel-1').append(tmp)
+            } catch (err) {
+              console.log(err)
+              Swal.fire(`${err}`)
+            }
+          })
+          
+        })
+        
+
+        setTimeout(()=>{
+        jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
+        jpage.forEach(i=>{$('#js-carousel-1').append(i)})
+        DrawArrow()
+        preloadImages(pages)
+
+        jpage[getCurrentIndex()].Show()
+        hidePreloader()
+        },1000)
+        
+
+      } catch (err) {
+        console.log(err)
+        Swal.fire(`${err}`)
+      }
+
+    }
+
+
+
+    async function toDataURL(url) {
+      promise = await new Promise(async (resolve, reject) => {
+        try {
+          fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+
+        } catch (err) {
+          console.log(err)
+          reject(err)
+        }
+      })
+      return promise
+    }
+
+    const toDataURL2 = url => fetch(url)
+      .then(response => response.blob())
+      .then(blob => new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.onerror = reject
+        reader.readAsDataURL(blob)
+      }))
+      
+
+
+    
+
+
+
+
+
+
+
+
     $('#title').click(event => {
       var elems = document.querySelectorAll('#modal1')
-      var instances = M.Modal.init(elems)
-      instances[0].open()
+      M.Modal.init(elems)[0].open()
+      $('.modal-content').html(`     <div class="row">
+        <div class="input-field col s12 l12 m12">
+          <select id="pages_list">
+          </select>
+          <label>Выберите страницу</label>
+        </div>
+      </div>`)
 
 
 
@@ -632,10 +738,11 @@
       })
       $('#pages_list').html(pages_list_tmp)
 
-      $(document).ready(() => {
-  
-        $('#pages_list').formSelect()
+      $(document).ready(function () {
+        $('select').formSelect()
       })
+
+
 
 
     })
@@ -652,41 +759,41 @@
       }
     })
 
- 
 
-    function ContinueRead(manga,chapter,page){
+
+    function ContinueRead(manga, chapter, page) {
       vue_chapter.openManga(manga)
-      vue_page.openChapter(chapter,page)
+      vue_page.openChapter(chapter, page)
     }
 
 
-    function ContinueReadInit(){
+    function ContinueReadInit() {
 
 
 
       $('#catalog-body').append(`<div class="col s12" id="continue-read">
         <div class="card center">
-          <span><b>Продолжить ${window.localStorage.getItem('chapter') } - ${window.localStorage.getItem('page')}</b></span>
+          <span><b>Продолжить ${window.localStorage.getItem('chapter')} - ${window.localStorage.getItem('page')}</b></span>
           <div id="continue-read-img" style="height: 100px;width: 100%;background-size: cover;"></div>
         </div>
       </div>`)
-      $('#continue-read').hide() 
+      $('#continue-read').hide()
 
-      if (null !== window.localStorage.getItem('manga') && null !== window.localStorage.getItem('chapter') && null !== window.localStorage.getItem('page') ) {
+      if (null !== window.localStorage.getItem('manga') && null !== window.localStorage.getItem('chapter') && null !== window.localStorage.getItem('page')) {
         $('#continue-read').show()
         image_title = ''
-        vue_catalog.mangas.forEach(i=>{
-          if(i.title===manga){
+        vue_catalog.mangas.forEach(i => {
+          if (i.title === manga) {
             image_title = i.title_image
           }
         })
         //document.querySelector('#continue-read').querySelector('img').setAttribute('src',image_title)
         //document.querySelector('#continue-read').querySelector('img').style('src',image_title)
-        $('#continue-read-img').css('backgroundImage',`url("${image_title}")`)
+        $('#continue-read-img').css('backgroundImage', `url("${image_title}")`)
       }
-      $('#continue-read').click(i=>{
+      $('#continue-read').click(i => {
         vue_chapter.openManga(window.localStorage.getItem('manga'))
-        vue_page.openChapter(window.localStorage.getItem('chapter'),Number(window.localStorage.getItem('page') ))
+        vue_page.openChapter(window.localStorage.getItem('chapter'), Number(window.localStorage.getItem('page')))
       })
     }
 
