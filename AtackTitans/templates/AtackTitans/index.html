@@ -638,7 +638,7 @@
               clearInterval(interval)
               },0)
 
-          }else if(jpage.length >= 5){
+          }else if(jpage.length >= 5 && jpage.length < pages.length ){
             jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
             jpage.forEach(i=>{$('#js-carousel-1').append(i)})
             DrawArrow()
