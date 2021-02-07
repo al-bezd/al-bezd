@@ -653,21 +653,26 @@
           })
           
         })
+        
+        interval = setInterval(()=>{
+          if(jpage.length >= pages.length) {
+            setTimeout(()=>{
+              jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
+              jpage.forEach(i=>{$('#js-carousel-1').append(i)})
+              DrawArrow()
+              preloadImages(pages)
+      
+              jpage[getCurrentIndex()].Show()
+              hidePreloader()
+              clearInterval(interval)
+              },0)
+          }
 
-        while(!(jpage.length >= pages.length)){
-
-        }
+        },1000)
+        
         
 
-        setTimeout(()=>{
-        jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
-        jpage.forEach(i=>{$('#js-carousel-1').append(i)})
-        DrawArrow()
-        preloadImages(pages)
-
-        jpage[getCurrentIndex()].Show()
-        hidePreloader()
-        },0)
+        
         
 
       } catch (err) {
