@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 
     'modelcluster',
     'taggit',
-'corsheaders',
+
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -57,23 +57,29 @@ INSTALLED_APPS = [
     'wagtail_blocks',
     'message_sender',
     "django.contrib.sitemaps",
-    'AtackTitans'
+    'AtackTitans',
+
     
 ]
 
 MIDDLEWARE = [
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+
+
+
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True # If this is used then `CORS_ORIGIN_WHITELIST` will not have any effect
+CORS_ORIGIN_ALLOW_ALL  = True
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'mysite.urls'

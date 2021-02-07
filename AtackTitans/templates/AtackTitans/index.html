@@ -421,39 +421,7 @@
 
           })
           loadPages()
-          /*
-          $('#base').html('<div id="js-carousel-1"></div>')
-
-          pages = []
-          axios.get('/AniReader/getLinks', { params: { manga: vue_chapter.current_manga, chapter: chapter } })
-            .then((response) => {
-              jpage = []
-
-              pages = response.data.pages
-              pages = pages.sort()
-              this.pages = pages
-              $('#js-carousel-1').html('')
-              pages.forEach((link) => {
-
-
-                tmp = $(`<img class="img" src="${toDataURL(link)}" alt="${link}" style="width: 100%;">`)
-                tmp.hide()
-                jpage.push(tmp)
-                $('#js-carousel-1').append(tmp)
-
-
-              })
-              DrawArrow()
-              preloadImages(pages)
-
-              jpage[getCurrentIndex()].Show()
-              hidePreloader()
-            })
-            .catch((err) => {
-              console.log(err)
-              Swal.fire(`${err}`)
-            })
-            */
+         
 
 
 
@@ -653,19 +621,29 @@
           })
           
         })
+
+        
         
         interval = setInterval(()=>{
           if(jpage.length >= pages.length) {
+
             setTimeout(()=>{
               jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
               jpage.forEach(i=>{$('#js-carousel-1').append(i)})
               DrawArrow()
-              preloadImages(pages)
+              //preloadImages(pages)
       
               jpage[getCurrentIndex()].Show()
               hidePreloader()
               clearInterval(interval)
               },0)
+
+          }else if(jpage.length >= 5){
+            jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
+            jpage.forEach(i=>{$('#js-carousel-1').append(i)})
+            DrawArrow()
+            jpage[getCurrentIndex()].Show()
+            hidePreloader()
           }
 
         },1000)
