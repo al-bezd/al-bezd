@@ -608,6 +608,32 @@
         vue_page.pages = pages
         $('#js-carousel-1').html('')
         pages.forEach((link) => {
+
+          tmp = $(`<img class="img" src="${link}" alt="${link}" index="${pages.indexOf(link)}" style="width: 100%;">`)
+          tmp.hide()
+          jpage.push(tmp)
+
+          DrawArrow()
+          preloadImages(pages)
+          jpage.forEach(item=>{
+
+            toDataURL2(item.attr('src')).then(dataUrl => {
+
+              item.attr.src = dataUrl
+
+            })
+
+          })
+      
+          jpage[getCurrentIndex()].Show()
+          hidePreloader()
+
+          //next_element = $(`[index="${getCurrentIndex()+1}"]`)
+          //if($(`.img attr[index="${hidePreloader()}"]`)){
+          //}
+
+
+          /*
           image_blob = toDataURL2(link).then(dataUrl => {
             try {
               tmp = $(`<img class="img" src="${dataUrl}" alt="${link}" index="${pages.indexOf(link)}" style="width: 100%;">`)
@@ -619,11 +645,14 @@
               Swal.fire(`${err}`)
             }
           })
+          */
+
+
           
         })
 
         
-        
+        /*
         interval = setInterval(()=>{
           $('#js-carousel-1').html('')
           if(jpage.length >= pages.length) {
@@ -632,7 +661,7 @@
               jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
               jpage.forEach(i=>{$('#js-carousel-1').append(i)})
               DrawArrow()
-              //preloadImages(pages)
+              preloadImages(pages)
       
               jpage[getCurrentIndex()].Show()
               hidePreloader()
@@ -643,12 +672,13 @@
             jpage.sort((a,b)=>{return Number(a.attr('index'))-Number(b.attr('index'))})
             jpage.forEach(i=>{$('#js-carousel-1').append(i)})
             DrawArrow()
+            preloadImages(pages)
             jpage[getCurrentIndex()].Show()
             hidePreloader()
           }
 
         },1000)
-        
+        */
         
 
         
