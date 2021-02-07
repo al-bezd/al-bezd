@@ -421,7 +421,7 @@
 
           })
           loadPages()
-         
+
 
 
 
@@ -612,20 +612,18 @@
           tmp = $(`<img class="img" src="${link}" alt="${link}" index="${pages.indexOf(link)}" style="width: 100%;">`)
           tmp.hide()
           jpage.push(tmp)
+          $('#js-carousel-1').append(tmp)
 
-          DrawArrow()
-          preloadImages(pages)
-
-      
-          jpage[getCurrentIndex()].Show()
-          hidePreloader()
-
-   
-
-          
         })
 
-        jpage.forEach(item=>{
+        DrawArrow()
+        preloadImages(pages)
+
+
+        jpage[getCurrentIndex()].Show()
+        hidePreloader()
+
+        jpage.forEach(item => {
 
           toDataURL2(item.attr('src')).then(dataUrl => {
 
@@ -635,7 +633,7 @@
 
         })
 
-        
+
         /*
         interval = setInterval(()=>{
           $('#js-carousel-1').html('')
@@ -663,10 +661,10 @@
 
         },1000)
         */
-        
 
-        
-        
+
+
+
 
       } catch (err) {
         console.log(err)
@@ -681,13 +679,13 @@
       promise = await new Promise(async (resolve, reject) => {
         try {
           fetch(url)
-      .then(response => response.blob())
-      .then(blob => new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onloadend = () => resolve(reader.result)
-        reader.onerror = reject
-        reader.readAsDataURL(blob)
-      }))
+            .then(response => response.blob())
+            .then(blob => new Promise((resolve, reject) => {
+              const reader = new FileReader()
+              reader.onloadend = () => resolve(reader.result)
+              reader.onerror = reject
+              reader.readAsDataURL(blob)
+            }))
 
         } catch (err) {
           console.log(err)
@@ -705,10 +703,10 @@
         reader.onerror = reject
         reader.readAsDataURL(blob)
       }))
-      
 
 
-    
+
+
 
 
 
