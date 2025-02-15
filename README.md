@@ -1,16 +1,18 @@
-### Hi there 👋
+### Hello! 👋
 
-<!--
-**al-bezd/al-bezd** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+I'm a super-duper developer, virtuously skilled in the following technologies:
 
-Here are some ideas to get you started:
+- 🐍 Python: Master of automation and web development.
+- 💻 TypeScript: Creating scalable and reliable front-end applications.
+- 🎮 C# with Unity: Bringing fantastic worlds to life in video games.
+- 📱 Dart with Flutter: Developing cross-platform mobile applications with stunning UI.
+---
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+### Привет! 👋
+
+Я — супер-пупер разработчик, виртуозно владеющий следующими технологиями:
+
+- 🐍 Python: мастер автоматизации и веб-разработки.
+- 💻 TypeScript: создаю масштабируемые и надёжные фронтенд-приложения.
+- 🎮 C# с Unity: оживляю фантастические миры в видеоиграх.
+- 📱 Dart с Flutter: разрабатываю кроссплатформенные мобильные приложения с потрясающим UI.
